@@ -1,14 +1,22 @@
 import React from 'react';
-import './Main.css';
+import style from './mainPage.module.css';
 
-function Main() {
+function MainPage() {
   return (
-    <div className="App">
-      <div className="side-bar"></div>
-      <div className="info-bar"></div>
-        <div className='chat-panel'></div>
+    <div className={style['container']}>
+      <div className={style["side-bar"]}>
+        <image className={style['avatar']}></image>
+      </div>
+      <div className={style["info-bar"]}>
+          <div className={style['search-box']}></div>
+      </div>
+      <div className={style['chat-panel']}>
+        <div className={style['contact-name']}></div>
+        <div className={style['dialogue-content']}></div>
+        <div className={style['input-box']}></div>
+      </div>
     </div>
   );
 }
 
-export default Main;
+export default MainPage;

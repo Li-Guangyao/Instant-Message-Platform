@@ -1,0 +1,38 @@
+.container {
+  position: absolute;
+  width: 900px;
+  height: 600px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: red;
+  display: flex;
+  flex-direction: row;
+}
+.container .side-bar {
+  width: 7%;
+  background-color: rgba(150, 174, 192, 0.948);
+}
+.container .info-bar {
+  width: 27%;
+  background-color: #d7d7d7;
+  border-right: solid 1px #d7d7d7;
+}
+.container .info-bar .search-box {
+  height: 10%;
+  background-color: #eaeaea;
+  position: relative;
+  top: 0;
+}
+.container .chat-panel {
+  width: 66%;
+  background-color: #f5f5f5;
+}
+.container .chat-panel .contact-name {
+  height: 10%;
+  width: 100%;
+  top: 0;
+  right: 0;
+  position: relative;
+  border-bottom: solid 1px #d7d7d7;
+}
