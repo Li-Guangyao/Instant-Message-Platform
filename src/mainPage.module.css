@@ -12,11 +12,31 @@
 .container .side-bar {
   width: 7%;
   background-color: rgba(150, 174, 192, 0.948);
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.container .side-bar .avatar {
+  width: 60%;
+  background-color: red;
+  position: absolute;
+  top: 20px;
+}
+.container .side-bar .avatar:after {
+  content: "";
+  display: block;
+  padding-top: 100%;
+}
+.container .side-bar .setting {
+  width: 70%;
+  position: absolute;
+  bottom: 25px;
 }
 .container .info-bar {
   width: 27%;
   background-color: #d7d7d7;
   border-right: solid 1px #d7d7d7;
+  position: relative;
 }
 .container .info-bar .search-box {
   height: 10%;
@@ -24,15 +44,107 @@
   position: relative;
   top: 0;
 }
-.container .chat-panel {
+.container .info-bar .search-box .search-input {
+  width: 80%;
+  height: 40%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 4px;
+  border: solid #b3b3b3 1px;
+}
+.container .dialogue-panel {
   width: 66%;
   background-color: #f5f5f5;
+  position: relative;
 }
-.container .chat-panel .contact-name {
+.container .dialogue-panel .dialogue-header {
   height: 10%;
   width: 100%;
-  top: 0;
-  right: 0;
-  position: relative;
   border-bottom: solid 1px #d7d7d7;
+  display: flex;
+  align-items: center;
+}
+.container .dialogue-panel .dialogue-header .contact-name {
+  margin-left: 30px;
+  font-size: large;
+}
+.container .dialogue-panel .dialogue-content {
+  position: absolute;
+  overflow: scroll;
+  top: 10%;
+  bottom: 30%;
+  width: 100%;
+  overflow-x: hidden;
+}
+.container .dialogue-panel .dialogue-content .response-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+.container .dialogue-panel .dialogue-content .single-message {
+  display: flex;
+  flex-direction: row;
+  margin: 20px;
+}
+.container .dialogue-panel .dialogue-content .single-message .single-message-avatar {
+  width: 37px;
+  height: 37px;
+  background-color: red;
+  margin-right: 2px;
+}
+.container .dialogue-panel .dialogue-content .single-message .arrow {
+  background-color: #bfbebe;
+  margin: 10px 0;
+  transform: rotate(45deg);
+  height: 10px;
+  width: 10px;
+  z-index: 1;
+  position: relative;
+  left: 5px;
+}
+.container .dialogue-panel .dialogue-content .single-message .single-message-content {
+  min-height: 15px;
+  max-width: 380px;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 4px;
+  background-color: #bfbebe;
+  padding: 10px;
+  font-size: 15px;
+  word-wrap: all;
+  display: flex;
+  align-items: center;
+}
+.container .dialogue-panel .input-box {
+  position: absolute;
+  width: 100%;
+  height: 30%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  border-top: solid 1px #d7d7d7;
+}
+.container .dialogue-panel .input-box .input-content {
+  width: 96%;
+  height: 68% !important;
+  border: none !important;
+  background-color: #f5f5f5 !important;
+  resize: none !important;
+  padding: 0 !important;
+  margin: 10px !important;
+  outline: none !important;
+}
+.container .dialogue-panel .input-box .input-send-btn {
+  width: 65px;
+  height: 30px;
+  background-color: grey;
+  position: absolute;
+  bottom: 15px;
+  right: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
