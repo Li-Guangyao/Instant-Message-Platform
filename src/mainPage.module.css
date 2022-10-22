@@ -84,6 +84,40 @@
   left: 0;
   width: 100%;
 }
+.container .dialogue-panel .dialogue-content .single-message-self {
+  display: flex;
+  flex-direction: row-reverse;
+  margin: 20px;
+}
+.container .dialogue-panel .dialogue-content .single-message-self .single-message-avatar-self {
+  width: 37px;
+  height: 37px;
+  background-color: red;
+  margin-right: 2px;
+}
+.container .dialogue-panel .dialogue-content .single-message-self .arrow-self {
+  background-color: #bfbebe;
+  margin: 10px 0;
+  transform: rotate(45deg);
+  height: 10px;
+  width: 10px;
+  z-index: 1;
+  position: relative;
+  left: -6px;
+}
+.container .dialogue-panel .dialogue-content .single-message-self .single-message-content-self {
+  min-height: 15px;
+  max-width: 380px;
+  width: fit-content;
+  height: fit-content;
+  border-radius: 4px;
+  background-color: #bfbebe;
+  padding: 10px;
+  font-size: 15px;
+  word-wrap: all;
+  display: flex;
+  align-items: center;
+}
 .container .dialogue-panel .dialogue-content .single-message {
   display: flex;
   flex-direction: row;

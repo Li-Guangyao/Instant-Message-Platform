@@ -5,52 +5,92 @@
   transform: translate(-50%, -50%);
   width: 300px;
   height: 450px;
-  background-color: blue;
+  background-color: rgb(255, 255, 255);
 
-  .avatar {
-    background-color: green;
-    width: 120px;
-    height: 120px;
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  .input-information{
+    .avatar {
+        background-color: green;
+        width: 120px;
+        height: 120px;
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    
+      .username{
+        background-color: bisque;
+        max-width: 2000px;
+        max-height: 30px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 25px;
+      }
+    
+      .password{
+        background-color: bisque;
+        max-width: 2000px;
+        max-height: 30px;
+        position: absolute;
+        top: 60%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 25px;
+      }
+    
+      .username, .password{
+        border-top:0;
+        border-left:0;
+        border-right: 0;
+        border-bottom: 1px solid grey;
+    
+        outline: none;
+    
+      }
+    
+      .login-btn{
+        background-color: bisque;
+        width: 200px;
+        height: 50px;
+        position: absolute;
+        top: 75%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 24px;
+        
+        text-align: center;
+        line-height: 50px;
+    
+        cursor: pointer;
+      }
+    
+      .login-btn:hover{
+    
+      }
+    
+      .switch-account-btn{
+        background-color: rgb(194, 194, 194);
+        max-width: 200px;
+        max-height: 50px;
+        position: absolute;
+        top: 85%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 10px;
+    
+        overflow: hidden;
+        cursor: pointer;
+      }
+    
+      .switch-account-btn:hover{
+        text-decoration: underline;
+      }
   }
 
-  .user-name{
-    background-color: bisque;
-    max-width: 150px;
-    max-height: 30px;
-    position: absolute;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 30px;
+  .email-verification{
+    
   }
 
-  .login-btn{
-    background-color: bisque;
-    max-width: 200px;
-    max-height: 50px;
-    position: absolute;
-    top: 75%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 30px;
-
-    overflow: hidden;
-  }
-
-  .switch-account-btn{
-    background-color: bisque;
-    max-width: 200px;
-    max-height: 50px;
-    position: absolute;
-    top: 85%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 10px;
-
-    overflow: hidden;
-  }
 }
