@@ -1,0 +1,23 @@
+{
+  "verbose": true,
+  "debug": true,
+  "ignore": [
+    "node_modules",
+    "./test",
+    "**/*.d.ts",
+    "*.test.ts",
+    "*.spec.ts",
+    "test/**/*",
+    "docs/*",
+    "*.json"
+  ],
+  "events": {
+    "restart": ""
+  },
+  "execMap": {
+    "ts": "ts-node"
+  },
+  "watch": ["*.*","router/*.*", "models/*.*", "database/*.*"],
+  "ext": "ts tsx js",
+  "inspect": true
+}
