@@ -1,14 +1,16 @@
 const nodemailer = require("nodemailer"); //引入模块
+const dotenv = require('dotenv');
+dotenv.config();
 
 let transporter = nodemailer.createTransport({
   //node_modules/nodemailer/lib/well-known/services.json  查看相关的配置，如果使用qq邮箱，就查看qq邮箱的相关配置
-  host: "smtp.163.com",
+  host: process.env.EMAIL_HOST,
   service: "163", //类型qq邮箱
-  port: 465,
+  port: process.env.EMAIL_PORT,
   secure: true, // true for 465, false for other ports
   auth: {
-    user: "15937106471@163.com", // 发送方的邮箱
-    pass: "OGSJEOANOTOMAPAN", // smtp 的授权码
+    user: process.env.EMAIL_SENDER, // 发送方的邮箱
+    pass: process.env.EMAIL_AUTHORIZATION_CODE, // smtp 的授权码
   },
 });
 //pass 不是邮箱账户的密码而是stmp的授权码（必须是相应邮箱的stmp授权码）

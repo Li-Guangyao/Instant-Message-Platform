@@ -13,24 +13,24 @@ app.get('/', function (req, res) {
 
 app.post('/register',(req,res)=>{
     let data = req.body.data
-    switch(data.interface){
-        case 'register':
-            register();
-            break;
-        case 'verifyEmail':
-            verifyEmail();
-            break;
-        case 'sendCode':
-            sendCode();
-            break;
-        case 'verifyCode':
-            verifyCode();
-            break;
-        default:
-            break;
-    }
+    // switch(data.interface){
+    //     case 'register':
+    //         register();
+    //         break;
+    //     case 'verifyEmail':
+    //         verifyEmail();
+    //         break;
+    //     case 'sendCode':
+    //         sendCode();
+    //         break;
+    //     case 'verifyCode':
+    //         verifyCode();
+    //         break;
+    //     default:
+    //         break;
+    // }
 
-    res.send(req.query)
+    res.send(req.ip)
 })
 
  
