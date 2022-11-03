@@ -6,58 +6,22 @@
   width: 300px;
   height: 450px;
   background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.container .input-information .avatar {
-  background-color: green;
-  width: 120px;
-  height: 120px;
+.container .email-verification {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+}
+.container .email-verification .email-verification-first {
+  display: flex;
+  flex-direction: row;
   position: absolute;
-  top: 30%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
-.container .input-information .username {
-  background-color: bisque;
-  max-width: 2000px;
-  max-height: 30px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 25px;
-}
-.container .input-information .password {
-  background-color: bisque;
-  max-width: 2000px;
-  max-height: 30px;
-  position: absolute;
-  top: 60%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 25px;
-}
-.container .input-information .username,
-.container .input-information .password {
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-  border-bottom: 1px solid grey;
-  outline: none;
-}
-.container .input-information .login-btn {
-  background-color: bisque;
-  width: 200px;
-  height: 50px;
-  position: absolute;
-  top: 75%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 24px;
-  text-align: center;
-  line-height: 50px;
-  cursor: pointer;
-}
-.container .input-information .switch-account-btn {
+.container .back-btn {
   background-color: #c2c2c2;
   max-width: 200px;
   max-height: 50px;
@@ -69,6 +33,6 @@
   overflow: hidden;
   cursor: pointer;
 }
-.container .input-information .switch-account-btn:hover {
+.container .back-btn:hover {
   text-decoration: underline;
 }

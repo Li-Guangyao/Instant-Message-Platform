@@ -6,6 +6,7 @@
 
 import registerRouter from './router/register'
 import loginRouter from './router/login';
+import systemRouter from './router/system';
 import express from 'express'
 import cors from 'cors'
 
@@ -16,11 +17,12 @@ app.use(express.urlencoded({extended:false}))
 app.use(cors())
  
 app.get('/', function (req:any, res:any) {
-   res.send(req.query);
+   res.send("后端成功启动!!!");
 })
 
 app.use('/register', registerRouter)
 app.use('/login', loginRouter)
+app.use('/syetem', systemRouter)
 
  
 var server = app.listen(8081, function () {

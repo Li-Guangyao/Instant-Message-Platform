@@ -1,5 +1,7 @@
 import { Router, Response, Request } from "express";
-const model = require("../models/model.js");
+
+const email = require('../email/email.js');
+// const model = require("../models/model.js");
 const router: Router = Router();
 
 router.post("/", async (req: Request, res: Response) => {
@@ -8,12 +10,18 @@ router.post("/", async (req: Request, res: Response) => {
   res.send(username+password);
 });
 
-router.post("/verifyEmail", async (req: Request, res: Response) => {
-  res.send("verifyEmail");
+router.post("/verify_email", async (req: Request, res: Response) => {
+  let data = req.body;
+  let {code} = data; 
+  res.send("verify_email");
 });
 
-router.post("/sendCode", async (req: Request, res: Response) => {});
+router.post("/send_code", async (req: Request, res: Response) => {
+  let data = req.body;
+  let {email} = data;
+  email.sendMail('1720344233@qq.com');
+});
 
-router.post("/verifyCode", async (req: Request, res: Response) => {});
+router.post("/verify_code", async (req: Request, res: Response) => {});
 
 export default router;
