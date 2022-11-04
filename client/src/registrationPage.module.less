@@ -1,52 +1,111 @@
+h3 {
+  margin: 15px 0;
+}
+
 .container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
+  width: 400px;
   height: 450px;
   background-color: rgb(255, 255, 255);
 
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
+  padding: 20px;
 
-  .email-verification{
-    display: flex;
-    flex-direction: column;
-    position: relative;
-
+  .username{
     width: 100%;
-
-    .email-verification-first{
-      display: flex;
-      flex-direction: row;
-
-      position: absolute;
+    .username-input{
+      width: 80%;
     }
-
-    .email-verification-second{
-
-    }
-
   }
 
-  .back-btn{
-    background-color: rgb(194, 194, 194);
+  .email {
+    width: 100%;
+
+    .email-input {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+
+      margin: 10px 0;
+
+      .email-input-box {
+        width: 50%;
+      }
+
+      .send-code-btn {
+        // position: absolute;
+        // top: 30%;
+        // height: 40%;
+        width: 40%;
+      }
+    }
+
+    .email-verify {
+      display: flex;
+      justify-content: space-between;
+
+      .code-input-box {
+        width: 50%;
+
+      }
+
+      .verify-code-btn {
+        width: 40%;
+      }
+    }
+  }
+
+  .password {
+    .password-input {
+      width: 80%;
+    }
+
+    .password-reinput{
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .register {
+    width: 60%;
+    margin: 20px 0;
+
+    position: absolute;
+    bottom: 13%;
+    font-size: 15px;
+  }
+
+  .back-btn {
     max-width: 200px;
     max-height: 50px;
+
     position: absolute;
-    top: 85%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 10px;
+    bottom: 5%;
+    font-size: 15px;
+    vertical-align: middle;
 
     overflow: hidden;
     cursor: pointer;
   }
 
-  .back-btn:hover{
+  .back-btn:hover {
     text-decoration: underline;
   }
 
+}
+
+.status-sign {
+  height: 20px;
+  margin: 0 5px;
+}
+
+input{
+  
 }
