@@ -4,7 +4,7 @@ const router: Router = Router();
 
 router.post("/", async (req: Request, res: Response) => {
   let data = req.body.data;
-//   let {usename, password} = data;
+  let {usename, password} = data;
   res.send("login");
 });
 

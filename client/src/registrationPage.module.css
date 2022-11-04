@@ -1,38 +1,80 @@
+h3 {
+  margin: 15px 0;
+}
 .container {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 300px;
+  width: 400px;
   height: 450px;
   background-color: #ffffff;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
+  padding: 20px;
 }
-.container .email-verification {
-  display: flex;
-  flex-direction: column;
-  position: relative;
+.container .username {
   width: 100%;
 }
-.container .email-verification .email-verification-first {
+.container .username .username-input {
+  width: 80%;
+}
+.container .email {
+  width: 100%;
+}
+.container .email .email-input {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 10px 0;
+}
+.container .email .email-input .email-input-box {
+  width: 50%;
+}
+.container .email .email-input .send-code-btn {
+  width: 40%;
+}
+.container .email .email-verify {
+  display: flex;
+  justify-content: space-between;
+}
+.container .email .email-verify .code-input-box {
+  width: 50%;
+}
+.container .email .email-verify .verify-code-btn {
+  width: 40%;
+}
+.container .password .password-input {
+  width: 80%;
+}
+.container .password .password-reinput {
+  display: flex;
+  align-items: center;
+}
+.container .register {
+  width: 60%;
+  margin: 20px 0;
   position: absolute;
+  bottom: 13%;
+  font-size: 15px;
 }
 .container .back-btn {
-  background-color: #c2c2c2;
   max-width: 200px;
   max-height: 50px;
   position: absolute;
-  top: 85%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 10px;
+  bottom: 5%;
+  font-size: 15px;
+  vertical-align: middle;
   overflow: hidden;
   cursor: pointer;
 }
 .container .back-btn:hover {
   text-decoration: underline;
+}
+.status-sign {
+  height: 20px;
+  margin: 0 5px;
 }

@@ -17,13 +17,20 @@ let transporter = nodemailer.createTransport({
 //邮箱---设置--账户--POP3/SMTP服务---开启---获取stmp授权码
 
 function sendMail(mail, code, call) {
+  let emailContent = `<p>
+    <p>Thanks for your registration, your verification code is 
+      <b>${code}</b>
+    </p>
+    <p>Please do not give it to others. </p>
+  </p>`
+
   // 发送的配置项
   let mailOptions = {
     from: '"Li Guangyao" <15937106471@163.com>', // 发送方
     to: mail, //接收者邮箱，多个邮箱用逗号间隔
-    subject: '欢迎来到"Express-demo"', // 标题
+    subject: 'Welcome to Websocket-based IM app', // 标题
     text: "Hello world?", // 文本内容
-    html: '<p>这里是"Express-demo"详情请点击:</p><a href="https://www.jianshu.com/u/5cdc0352bf01">点击跳转</a>', //页面内容
+    html: emailContent
     // attachments: [{//发送文件
     // 		filename: 'index.html', //文件名字
     // 		path: './index.html' //文件路径
