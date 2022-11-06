@@ -10,7 +10,6 @@ import systemRouter from './router/system';
 import express from 'express'
 import cors from 'cors'
 
-const 
 const app = express();
 
 app.use(express.json())
@@ -23,7 +22,7 @@ app.get('/', function (req:any, res:any) {
 
 app.use('/register', registerRouter)
 app.use('/login', loginRouter)
-app.use('/syetem', systemRouter)
+app.use('/system', systemRouter)
 
  
 var server = app.listen(8081, function () {

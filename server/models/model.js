@@ -1,11 +1,11 @@
 // 自动扫描model，引用的时候可以不用每个model都再写一遍
 const fs = require('fs');
-const db = require('../database/database.js');
+const db = require('../database/database.ts');
 
 // __dirname是当前模块的目录名字
 let files = fs.readdirSync(__dirname);
 
-let ts_files = files.filter((f)=>{
+let ts_files = files.filter((f) => {
     return f.endsWith('.ts');
 }, files);
 

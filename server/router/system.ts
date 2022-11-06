@@ -1,23 +1,28 @@
 import { Router, Response, Request } from "express";
+import { verifyToken } from "../manager/jwt";
 const model = require("../models/model.js");
 const router: Router = Router();
 
 router.post("/upload_image", async (req: Request, res: Response) => {
   let data = req.body;
-  let {username, password} = data;
-  res.send(username+password);
+  let { username, password } = data;
+  res.send(username + password);
 });
 
 router.post("/change_name", async (req: Request, res: Response) => {
   res.send("verify_email");
 });
 
-router.post("/change_password", async (req: Request, res: Response) => {});
+router.post("/change_password", async (req: Request, res: Response) => {
+  res.send("changename")
+});
 
+router.post("/verify_token", async (req: Request, res: Response) => {
+  console.log("verify_token")
+  // res.send("verify_token")
+  res.send(verifyToken(req, res)) 
+});
 
-function uploadImage(){
-    
-}
-
+function uploadImage() {}
 
 export default router;
