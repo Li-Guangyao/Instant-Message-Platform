@@ -19,9 +19,8 @@ router.post("/send_code", async (req: Request, res: Response) => {
 
 router.post("/verify_code", async (req: Request, res: Response) => {
   let data = req.body;
-  let { usercode } = data;
-
-  verifyCode(usercode);
+  let { code } = data;
+  res.send(await verifyCode(code))
 });
 
 function sendCode(email: string): void {
@@ -35,9 +34,10 @@ function generateCode(): string {
   return res;
 }
 
-function verifyCode(usercode:string) :boolean{
-  const code = emailManager.get('username')
-  return code == usercode;
+async function verifyCode(usercode:string) :Promise<any>{
+  console.log("Request verify Code")
+  const code = await redisManager.get("username")
+  return code==usercode
 }
 
 export default router;

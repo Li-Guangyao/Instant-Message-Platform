@@ -1,48 +1,37 @@
-import {Model, DataTypes} from "sequelize";
-const sequelize =  require( "../database/database.js");
+import { Model, DataTypes } from "sequelize";
+import { sequelize } from "../database/database";
 
-class User extends Model {
-    declare userId: number;
-    declare userName: string;
-    declare email: string;
-    declare password: string;
-
-    declare address: string;
-    declare google: string;
-    declare github: string;
+export default class User extends Model {
+  declare id: number;
+  declare username: string;
+  declare email: string;
+  declare password: string;
 }
 
-// User.init({
-//     userId: {
-//         type: DataTypes.INTEGER,
-//         primaryKey: true,
-//         autoIncrement: true
-//     },
-//     userName:{
-//         type: DataTypes.STRING,
-//         allowNull: false,
-//     },
-//     address: {
-//         type: DataTypes.STRING,
-//         unique: true,
-//         allowNull: false
-//     },
-//     email: {
-//         type: DataTypes.STRING,
-//         allowNull: true,
-//         validate: {isEmail: true}
-//     },
-//     google: {
-//         type: DataTypes.STRING,
-//         allowNull: true
-//     },
-//     github:{
-//         type:DataTypes.STRING,
-//         allowNull: true
-//     }
-// }, {
-//     sequelize,
-//     modelName: "User",
-// });
-
-export {User};
+User.init(
+  {
+    id: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: { isEmail: true },
+    },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    }
+  },
+  {
+    sequelize,
+    modelName: "User",
+  }
+);

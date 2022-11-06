@@ -12,6 +12,12 @@ function RegistrationPage() {
   const navigate = useNavigate();
   const [emailAddress, setEmailAddress] = useState("");
   const [isEmailCorrect, setEmailCorrect] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+
+  const [password, setPassword] = useState("");
+  const [isPasswordVerified, setIsPasswordVerified] = useState(false);
+
+  let codeInput: string = "";
 
   function login(): void {
     navigate("/");
@@ -33,6 +39,25 @@ function RegistrationPage() {
           console.log("res", res);
         });
     }
+  }
+
+  function verifyCode(): void {
+    // if (codeInput == "") {
+    //   return;
+    // } else {
+
+    // }
+
+    axios
+    .post("http://127.0.0.1:8081/register/verify_code", {
+      code: codeInput,
+    })
+    .then((res) => {
+      console.log("res", res);
+    })
+    .catch((err) => {
+      console.log("err", err);
+    });
   }
 
   function regisgter(): void {
@@ -108,8 +133,11 @@ function RegistrationPage() {
           <input
             className={style["code-input-box"]}
             placeholder="Input the code you've received."
+            onInput={(e: any) => {
+              codeInput = e.target.value;
+            }}
           ></input>
-          {isEmailCorrect ? (
+          {isEmailVerified ? (
             <img
               className={style["status-sign"]}
               src={require("./images/check.png")}
@@ -120,17 +148,33 @@ function RegistrationPage() {
               src={require("./images/cross.png")}
             ></img>
           )}
-          <button className={style["verify-code-btn"]}>Verify</button>
+          <button className={style["verify-code-btn"]} onClick={verifyCode}>
+            Verify Email
+          </button>
         </div>
       </div>
 
       <div className={style["password"]}>
         <h3>Set a password</h3>
-        <input className={style["password-input"]} type="password"></input>
+        <input
+          className={style["password-input"]}
+          type="password"
+          onInput={(e: any) => {
+            setPassword(e.target.value);
+          }}
+        ></input>
         <h4>Reinput the password.</h4>
         <div className={style["password-reinput"]}>
-          <input className={style["password-input"]} type="password"></input>
-          {isEmailCorrect ? (
+          <input
+            className={style["password-input"]}
+            type="password"
+            onInput={(e: any) => {
+              password == e.target.value
+                ? setIsPasswordVerified(true)
+                : setIsPasswordVerified(false);
+            }}
+          ></input>
+          {isPasswordVerified ? (
             <img
               className={style["status-sign"]}
               src={require("./images/check.png")}
@@ -149,7 +193,7 @@ function RegistrationPage() {
       </button>
 
       <div className={style["back-btn"]} onClick={goBack}>
-      &lt; Go Back
+        &lt; Go Back
       </div>
     </div>
   );
