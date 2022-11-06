@@ -8,64 +8,50 @@
   background-color: #ffffff;
 }
 .container .avatar {
-  background-color: green;
   width: 120px;
   height: 120px;
   position: absolute;
-  top: 30%;
+  top: 25%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
-.container .username {
-  background-color: bisque;
-  max-width: 2000px;
+.container .email-input {
   max-height: 30px;
+  width: 80%;
   position: absolute;
-  top: 50%;
+  top: 55%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 25px;
+  font-size: 20px;
 }
-.container .password {
-  background-color: bisque;
-  max-width: 2000px;
+.container .password-input {
   max-height: 30px;
+  width: 80%;
   position: absolute;
-  top: 60%;
+  top: 65%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 25px;
-}
-.container .username,
-.container .password {
-  border-top: 0;
-  border-left: 0;
-  border-right: 0;
-  border-bottom: 1px solid grey;
-  outline: none;
+  font-size: 20px;
 }
 .container .login-btn {
-  background-color: bisque;
-  width: 200px;
-  height: 50px;
+  width: 55%;
+  height: 40px;
   position: absolute;
-  top: 75%;
+  top: 80%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-size: 24px;
   text-align: center;
-  line-height: 50px;
   cursor: pointer;
 }
 .container .switch-account-btn {
-  background-color: #c2c2c2;
   max-width: 200px;
   max-height: 50px;
   position: absolute;
-  top: 85%;
-  left: 50%;
+  bottom: 5%;
+  right: 5%;
   transform: translate(-50%, -50%);
-  font-size: 10px;
+  font-size: 12px;
   overflow: hidden;
   cursor: pointer;
 }

@@ -30,7 +30,7 @@
 .container .side-bar .setting {
   width: 70%;
   position: absolute;
-  bottom: 25px;
+  bottom: 35px;
 }
 .container .info-bar {
   width: 27%;
@@ -78,24 +78,18 @@
   width: 100%;
   overflow-x: hidden;
 }
-.container .dialogue-panel .dialogue-content .response-text {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-}
-.container .dialogue-panel .dialogue-content .single-message-self {
+.container .dialogue-panel .dialogue-content .message-self {
   display: flex;
   flex-direction: row-reverse;
   margin: 20px;
 }
-.container .dialogue-panel .dialogue-content .single-message-self .single-message-avatar-self {
+.container .dialogue-panel .dialogue-content .message-self .message-avatar-self {
   width: 37px;
   height: 37px;
   background-color: red;
   margin-right: 2px;
 }
-.container .dialogue-panel .dialogue-content .single-message-self .arrow-self {
+.container .dialogue-panel .dialogue-content .message-self .arrow-self {
   background-color: #bfbebe;
   margin: 10px 0;
   transform: rotate(45deg);
@@ -105,7 +99,7 @@
   position: relative;
   left: -6px;
 }
-.container .dialogue-panel .dialogue-content .single-message-self .single-message-content-self {
+.container .dialogue-panel .dialogue-content .message-self .message-content-self {
   min-height: 15px;
   max-width: 380px;
   width: fit-content;
@@ -114,22 +108,20 @@
   background-color: #bfbebe;
   padding: 10px;
   font-size: 15px;
-  word-wrap: all;
-  display: flex;
-  align-items: center;
+  word-wrap: break-word;
 }
-.container .dialogue-panel .dialogue-content .single-message {
+.container .dialogue-panel .dialogue-content .message {
   display: flex;
   flex-direction: row;
   margin: 20px;
 }
-.container .dialogue-panel .dialogue-content .single-message .single-message-avatar {
+.container .dialogue-panel .dialogue-content .message .message-avatar {
   width: 37px;
   height: 37px;
   background-color: red;
   margin-right: 2px;
 }
-.container .dialogue-panel .dialogue-content .single-message .arrow {
+.container .dialogue-panel .dialogue-content .message .arrow {
   background-color: #bfbebe;
   margin: 10px 0;
   transform: rotate(45deg);
@@ -139,7 +131,7 @@
   position: relative;
   left: 5px;
 }
-.container .dialogue-panel .dialogue-content .single-message .single-message-content {
+.container .dialogue-panel .dialogue-content .message .message-content {
   min-height: 15px;
   max-width: 380px;
   width: fit-content;
@@ -148,9 +140,7 @@
   background-color: #bfbebe;
   padding: 10px;
   font-size: 15px;
-  word-wrap: all;
-  display: flex;
-  align-items: center;
+  word-wrap: break-word;
 }
 .container .dialogue-panel .input-box {
   position: absolute;
@@ -181,4 +171,18 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.setting-panel {
+  background-color: #9ba5b6;
+  width: 90px;
+}
+:global(.ant-popover-arrow) {
+  visibility: hidden;
+}
+:global(.ant-popover-arrow-content::before) {
+  background-color: #9ba5b6;
+}
+:global(.ant-popover-inner-content) {
+  padding: 0 0 0 10px !important;
+  background-color: #9ba5b6;
 }

@@ -35,7 +35,7 @@
     .setting {
       width: 70%;
       position: absolute;
-      bottom: 25px;
+      bottom: 35px;
     }
   }
 
@@ -101,60 +101,50 @@
 
       overflow-x: hidden;
 
-      .response-text {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-      }
-
-      .single-message-self{
+      .message-self {
         display: flex;
         flex-direction: row-reverse;
         margin: 20px;
 
-        .single-message-avatar-self{
-            width: 37px;
-            height: 37px;
-            background-color: red;
-  
-            margin-right: 2px;
+        .message-avatar-self {
+          width: 37px;
+          height: 37px;
+          background-color: red;
+
+          margin-right: 2px;
         }
 
         .arrow-self {
-            background-color: #bfbebe;
-            margin: 10px 0;
-            transform: rotate(45deg);
-            height: 10px;
-            width: 10px;
-            z-index: 1;
-            position: relative;
-            left: -6px;
+          background-color: #bfbebe;
+          margin: 10px 0;
+          transform: rotate(45deg);
+          height: 10px;
+          width: 10px;
+          z-index: 1;
+          position: relative;
+          left: -6px;
         }
 
-        .single-message-content-self{
-            min-height: 15px;
-            max-width: 380px;
-            width: fit-content;
-            height: fit-content;
-            border-radius: 4px;
-            background-color: rgb(191, 190, 190);
-            padding: 10px;
-            font-size: 15px;
-            word-wrap: all;
-  
-            display: flex;
-            align-items: center;
+        .message-content-self {
+          min-height: 15px;
+          max-width: 380px;
+          width: fit-content;
+          height: fit-content;
+          border-radius: 4px;
+          background-color: rgb(191, 190, 190);
+          padding: 10px;
+          font-size: 15px;
+          word-wrap: break-word;
         }
 
       }
 
-      .single-message {
+      .message {
         display: flex;
         flex-direction: row;
         margin: 20px;
 
-        .single-message-avatar {
+        .message-avatar {
           width: 37px;
           height: 37px;
           background-color: red;
@@ -163,18 +153,18 @@
         }
 
         .arrow {
-            background-color: #bfbebe;
-            margin: 10px 0;
-            transform: rotate(45deg);
-            height: 10px;
-            width: 10px;
-            z-index: 1;
-            position: relative;
-            left: 5px;
+          background-color: #bfbebe;
+          margin: 10px 0;
+          transform: rotate(45deg);
+          height: 10px;
+          width: 10px;
+          z-index: 1;
+          position: relative;
+          left: 5px;
         }
 
         // 尝试使用伪元素效果不好
-        // .single-message-avatar:after {
+        // .message-avatar:after {
         //   content: " ";
         //   background-color: #bfbebe;
         //   top: 10px;
@@ -186,7 +176,7 @@
         //   width: 10px;
         // }
 
-        .single-message-content {
+        .message-content {
           min-height: 15px;
           max-width: 380px;
           width: fit-content;
@@ -195,10 +185,7 @@
           background-color: rgb(191, 190, 190);
           padding: 10px;
           font-size: 15px;
-          word-wrap: all;
-
-          display: flex;
-          align-items: center;
+          word-wrap: break-word;
         }
 
 
@@ -247,4 +234,22 @@
       }
     }
   }
+}
+
+.setting-panel {
+  background-color: rgb(155, 165, 182);
+  width: 90px;
+}
+
+:global(.ant-popover-arrow) {
+  visibility: hidden;
+}
+
+:global(.ant-popover-arrow-content::before) {
+  background-color: rgb(155, 165, 182);
+}
+
+:global(.ant-popover-inner-content) {
+  padding: 0 0 0 10px !important;
+  background-color: rgb(155, 165, 182);
 }

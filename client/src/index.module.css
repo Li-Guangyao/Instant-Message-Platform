@@ -9,3 +9,22 @@
   position: absolute;
   object-fit: contain;
 }
+input {
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 1px solid grey;
+  outline: none;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  background-color: #000000 !important;
+  background-p_w_picpath: none !important;
+  color: #000000 !important;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+}
+body {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 12px;
+  line-height: 24px;
+}
