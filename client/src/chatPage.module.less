@@ -67,6 +67,58 @@
         border: solid rgb(179, 179, 179) 1px;
       }
     }
+
+    .chat-list {
+      height: 90%;
+      background-color: red;
+
+      .chat-list-item {
+        display: flex;
+        flex-direction: row;
+        height: 12%;
+
+        .chat-list-item-avatar-container {
+          flex: 1;
+          display: flex;
+
+          .chat-list-item-avatar {
+            background-color: blue;
+            margin: auto 10px;
+            width: 41px;
+            height: 41px;
+          }
+        }
+
+        .chat-list-item-info {
+          display: flex;
+          flex-direction: column;
+          flex: 3;
+
+          .chat-list-item-username {
+            margin: 10px 0 0 0;
+            font-size: 18px;
+            width: 170px;
+            height: 45%;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis
+          }
+
+          .chat-list-item-lastmessage {
+            height: 60%;
+            font-size: 12px;
+            width: 100%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+          }
+        }
+      }
+
+      .chat-list-item:hover{
+        background-color: blue;
+      }
+    }
   }
 
   .dialogue-panel {

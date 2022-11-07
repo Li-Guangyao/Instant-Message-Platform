@@ -21,10 +21,13 @@ export default function WSS(server: any) {
 
     ws.on("message", (message) => {
       // 广播消息给所有客户端
-      console.log(wss.clients)
-
       wss.clients.forEach((client) => {
-        if (client != ws && client.readyState === WebSocket.OPEN) {
+
+        // if (client != ws && client.readyState === WebSocket.OPEN) {
+        //   client.send(message);
+        // }
+
+        if(client['receiver'] == "target"){
           client.send(message);
         }
       });

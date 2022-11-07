@@ -18,14 +18,17 @@ interface messageObj {
 }
 
 function ChatPage() {
-  const [message, setMessage] = useState<messageObj>({});
-  const [messageList, setMessageList] = useState<Array<messageObj>>([]);
   const location = useLocation();
   const { email } = location.state;
+  const [message, setMessage] = useState<messageObj>({
+    sender: email,
+    receiver: "1720344233@qq.com",
+  });
+  const [messageList, setMessageList] = useState<Array<messageObj>>([]);
 
   console.log("socket", socket);
 
-  // Will be triggered when receives a message;
+  // Will be triggered when receiveing a message;
   socket.onmessage = function (event: any) {
     const newMessage: messageObj = {
       isMine: false,
@@ -86,6 +89,21 @@ function ChatPage() {
             className={style["search-input"]}
             placeholder="Type to Search"
           ></input>
+        </div>
+        <div className={style["chat-list"]}>
+          <div className={style["chat-list-item"]}>
+            <div className={style["chat-list-item-avatar-container"]}>
+              <img className={style["chat-list-item-avatar"]}></img>
+            </div>
+            <div className={style["chat-list-item-info"]}>
+              <div className={style["chat-list-item-username"]}>
+                Li Guangyao555555555555555
+              </div>
+              <div className={style["chat-list-item-lastmessage"]}>
+                Hello, nice to meet you!{" "}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
