@@ -22,6 +22,6 @@ export function verifyToken(req: Request, res?: Response, next?) {
       console.log("verify decoded", decoded);
       return res.json({ code: 200, msg: "token有效" });
     }
-    // next();
+    next();
   });
 }

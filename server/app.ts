@@ -1,31 +1,28 @@
-// const email = require('./email.js')
-// const express = require('express')
-// const app = express();
-
-// email.sendMail('1720344233@qq.com')
-
-import registerRouter from './router/register'
-import loginRouter from './router/login';
-import systemRouter from './router/system';
-import express from 'express'
-import cors from 'cors'
+import registerRouter from "./router/register";
+import loginRouter from "./router/login";
+import systemRouter from "./router/system";
+import { verifyToken } from "./manager/jwt";
+import express from "express";
+import WSS from "./manager/websocket";
+import cors from "cors";
 
 const app = express();
 
-app.use(express.json())
-app.use(express.urlencoded({extended:false}))
-app.use(cors())
- 
-app.get('/', function (req:any, res:any) {
-   res.send("后端成功启动!!!");
-})
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cors());
+// app.use(verifyToken)
 
-app.use('/register', registerRouter)
-app.use('/login', loginRouter)
-app.use('/system', systemRouter)
+app.get("/", function (req: any, res: any) {
+  res.send("后端成功启动!!!");
+});
+app.use("/register", registerRouter);
+app.use("/login", loginRouter);
+app.use("/system", systemRouter);
 
- 
-var server = app.listen(8081, function () {
-  var host = server.address()
-  console.log("应用实例，访问地址为 http://%s:%s", host, server)
-})
+const server = app.listen(process.env.SERVER_PORT, () => {
+  const host: any = server.address();
+  console.log("The server has started, on the port %s", host.port);
+});
+
+WSS(server);

@@ -27,10 +27,9 @@ router.post("/", async (req: Request, res: Response) => {
     res.json({
       code: 200,
       msg: "Log in successfully.",
-      data:{
+      data: {
         token,
-        
-      }
+      },
     });
   }
 });
