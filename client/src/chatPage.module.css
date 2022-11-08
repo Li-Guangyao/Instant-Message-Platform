@@ -56,7 +56,7 @@
 }
 .container .info-bar .chat-list {
   height: 90%;
-  background-color: red;
+  background-color: #d6d6d6;
 }
 .container .info-bar .chat-list .chat-list-item {
   display: flex;
@@ -95,8 +95,15 @@
   overflow: hidden;
   white-space: nowrap;
 }
+.container .info-bar .chat-list .chosen {
+  background-color: #919191 !important;
+}
 .container .info-bar .chat-list .chat-list-item:hover {
-  background-color: blue;
+  background-color: #bdbcbc;
+  cursor: pointer;
+}
+.container .info-bar .chat-list .chat-list-item:focus {
+  background-color: pink;
 }
 .container .dialogue-panel {
   width: 66%;

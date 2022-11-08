@@ -70,7 +70,7 @@
 
     .chat-list {
       height: 90%;
-      background-color: red;
+      background-color: rgb(214, 214, 214);
 
       .chat-list-item {
         display: flex;
@@ -115,8 +115,17 @@
         }
       }
 
+      .chosen{
+        background-color: rgb(145, 145, 145) !important;
+      }
+
       .chat-list-item:hover{
-        background-color: blue;
+        background-color: rgb(189, 188, 188);
+        cursor: pointer;
+      }
+
+      .chat-list-item:focus{
+        background-color: pink;
       }
     }
   }

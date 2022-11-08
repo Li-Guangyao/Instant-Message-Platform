@@ -17,14 +17,38 @@ interface messageObj {
   receiver?: String;
 }
 
+interface chatListObj {
+  username: String;
+  email: String;
+  messageList: Array<messageObj>;
+  lastMessageTime: Date;
+}
+
 function ChatPage() {
   const location = useLocation();
   const { email } = location.state;
+
+  const [receiverIdx, setReceiverIdx] = useState(0);
   const [message, setMessage] = useState<messageObj>({
     sender: email,
-    receiver: "1720344233@qq.com",
+    receiver: "1169969860@qq.com",
   });
   const [messageList, setMessageList] = useState<Array<messageObj>>([]);
+  // const [chatList, setChatList] = useState(new Map());
+  const [chatList, setChatList] = useState<Array<chatListObj>>([
+    {
+      username: "Li Guangyao",
+      email: "1169969860@qq.com",
+      messageList: [],
+      lastMessageTime: new Date(),
+    },
+    {
+      username: "Li Goudan",
+      email: "1169969860@qq.com",
+      messageList: [],
+      lastMessageTime: new Date(),
+    },
+  ]);
 
   console.log("socket", socket);
 
@@ -91,25 +115,46 @@ function ChatPage() {
           ></input>
         </div>
         <div className={style["chat-list"]}>
-          <div className={style["chat-list-item"]}>
-            <div className={style["chat-list-item-avatar-container"]}>
-              <img className={style["chat-list-item-avatar"]}></img>
-            </div>
-            <div className={style["chat-list-item-info"]}>
-              <div className={style["chat-list-item-username"]}>
-                Li Guangyao555555555555555
+          {chatList.map((item, index) => {
+            return (
+              <div
+                className={style["chat-list-item"]}
+                id={"chat-list-item" + index}
+                key={index}
+                onClick={() => {
+                  let temp = document.getElementById(
+                    "chat-list-item" + receiverIdx
+                  ) as HTMLElement;
+                  temp.className = temp.className.split(" ")[0];
+                  setReceiverIdx(index);
+                  temp = document.getElementById(
+                    "chat-list-item" + index
+                  ) as HTMLElement;
+                  temp.className += " " + style["chosen"];
+                }}
+              >
+                <div className={style["chat-list-item-avatar-container"]}>
+                  <img className={style["chat-list-item-avatar"]}></img>
+                </div>
+                <div className={style["chat-list-item-info"]}>
+                  <div className={style["chat-list-item-username"]}>
+                    {item.username}
+                  </div>
+                  <div className={style["chat-list-item-lastmessage"]}>
+                    Hello, nice to meet you!{" "}
+                  </div>
+                </div>
               </div>
-              <div className={style["chat-list-item-lastmessage"]}>
-                Hello, nice to meet you!{" "}
-              </div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
 
       <div className={style["dialogue-panel"]}>
         <div className={style["dialogue-header"]}>
-          <div className={style["contact-name"]}>James Lee</div>
+          <div className={style["contact-name"]}>
+            {chatList[receiverIdx].username}
+          </div>
         </div>
 
         <div className={style["dialogue-content"]} id="dialogue-content">
