@@ -2,6 +2,10 @@ import style from "./registrationPage.module.css";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { message } from "antd";
+import "antd/lib/message/style/index.css";
+import { clearInterval } from "timers";
+import {setInterval} from 'timers';
 
 interface User {
   username: string;
@@ -10,6 +14,8 @@ interface User {
 
 function RegistrationPage() {
   const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [countdown, setCountdown] = useState(60);
   const [emailAddress, setEmailAddress] = useState("");
   const [isEmailCorrect, setEmailCorrect] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -29,35 +35,37 @@ function RegistrationPage() {
 
   function sendCode(): void {
     if (!isEmailCorrect) {
-      window.alert("Email Address Format Incorrect.");
+      message.warn("Email Address Format Incorrect.");
     } else {
       axios
         .post("http://127.0.0.1:8081/register/send_code", {
           email: emailAddress,
         })
         .then((res) => {
-          console.log("res", res);
+          let temptimer = setInterval(() => {
+            if (countdown > 0) {
+              setCountdown(countdown - 1);
+            }
+            let btn = document.getElementById("send-code-btn") as HTMLElement;
+            btn.innerText = countdown + "s";
+          }, 1000);
+          clearInterval(temptimer);
         });
     }
   }
 
   function verifyCode(): void {
-    // if (codeInput == "") {
-    //   return;
-    // } else {
-
-    // }
-
     axios
-    .post("http://127.0.0.1:8081/register/verify_code", {
-      code: codeInput,
-    })
-    .then((res) => {
-      console.log("res", res);
-    })
-    .catch((err) => {
-      console.log("err", err);
-    });
+      .post("http://127.0.0.1:8081/register/verify_code", {
+        email: emailAddress,
+        code: codeInput,
+      })
+      .then((res) => {
+        console.log("res", res);
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
   }
 
   function regisgter(): void {
@@ -96,8 +104,8 @@ function RegistrationPage() {
           className={style["username-input"]}
           type=""
           placeholder="Input username"
-          onInput={(e) => {
-            inputEmail(e);
+          onInput={(e: any) => {
+            setUsername(e.target.value);
           }}
         ></input>
       </div>
@@ -124,7 +132,11 @@ function RegistrationPage() {
               src={require("./images/cross.png")}
             ></img>
           )}
-          <button className={style["send-code-btn"]} onClick={sendCode}>
+          <button
+            className={style["send-code-btn"]}
+            id="send-code-btn"
+            onClick={sendCode}
+          >
             Send Verification Code
           </button>
         </div>
@@ -132,7 +144,7 @@ function RegistrationPage() {
         <div className={style["email-verify"]}>
           <input
             className={style["code-input-box"]}
-            placeholder="Input the code you've received."
+            placeholder="Input the 6-bit code you received."
             onInput={(e: any) => {
               codeInput = e.target.value;
             }}
@@ -193,7 +205,7 @@ function RegistrationPage() {
       </button>
 
       <div className={style["back-btn"]} onClick={goBack}>
-        &lt; Go Back
+        &lt; -Go Back
       </div>
     </div>
   );
