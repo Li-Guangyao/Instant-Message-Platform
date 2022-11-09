@@ -1,10 +1,12 @@
 import WebSocket from "ws";
 
+let wsClients = new Map<String, WebSocket>();
+
 export default function WSS(server: any) {
   const wss = new WebSocket.Server({ server });
 
-  wss.on("open", () => {
-    console.log("connected");
+  wss.on("open", (e) => {
+    console.log("connected", e);
   });
 
   wss.on("close", () => {
@@ -17,20 +19,41 @@ export default function WSS(server: any) {
     // console.log(`${clientName} is connected`);
     // console.log(req.connection);
     // 发送欢迎信息给客户端
-    // ws.send("Welcome :" + clientName + "加入聊天室");
+
+    // ws.send("Welcome :" + "加入聊天室");
+    // ws.send(JSON.stringify(client));
+
+    const clientEmail: string = req.url.slice(1);
+    wsClients.set(clientEmail, ws);
 
     ws.on("message", (message) => {
-      // 广播消息给所有客户端
-      wss.clients.forEach((client) => {
+      // console.log("-----------------------------");
+      // console.log("ws", typeof ws);
+      // console.log("-----------------------------");
+      // console.log("req", req.url);
+      // console.log("-----------------------------");
+      // console.log("client", client);
+      // console.log("-----------------------------");
 
-        // if (client != ws && client.readyState === WebSocket.OPEN) {
-        //   client.send(message);
-        // }
+      const messageObj = JSON.parse(message);
+      console.log("messgeObj", messageObj);
+      const receiverStr = messageObj.receiver;
+      console.log("receiverStr", messageObj.receiver);
+      const receiverObj = wsClients.get(receiverStr);
+      console.log("receiverObj", receiverObj);
+      console.log(wsClients);
 
-        if(client['receiver'] == "target"){
-          client.send(message);
+      if (receiverObj instanceof WebSocket) {
+        if (receiverObj.readyState === WebSocket.OPEN) {
+          receiverObj.send("" + message);
         }
-      });
+      }
+
+      // wss.clients.forEach((client) => {
+      //   if (client.readyState === WebSocket.OPEN) {
+      //     client.send("" + message);
+      //   }
+      // });
     });
   });
 }

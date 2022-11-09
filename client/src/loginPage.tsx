@@ -2,7 +2,8 @@ import style from "./loginPage.module.css";
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { Button } from "antd";
+import { Button, message } from "antd";
+import "antd/lib/message/style/index.css";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -45,7 +46,7 @@ export default function LoginPage() {
               },
             });
           } else {
-            alert("Token expired, please log in again.");
+            message.warn("Token expired, please log in again.");
             navigate("/login");
           }
         });
@@ -63,6 +64,7 @@ export default function LoginPage() {
       .then((res) => {
         const body = res.data;
         if (body.code == 200) {
+          localStorage.setItem("email", email);
           localStorage.setItem("token", body.data.token);
           navigate("/chat", {
             state: {
@@ -70,7 +72,7 @@ export default function LoginPage() {
             },
           });
         } else {
-          alert("Wrong Password, or the user doesn't exist.");
+          message.warn("Wrong Password, or the user doesn't exist.");
         }
       })
       .catch((err) => {

@@ -7,14 +7,17 @@ import "antd/lib/popover/style/index.css";
 
 const { TextArea } = Input;
 
-let socket = new WebSocket("ws://39.99.133.150:8081/ws");
+// let socket = new WebSocket("ws://39.99.133.150:8082/ws");
+let socket: any = new WebSocket(
+  "ws://127.0.0.1:8081/" + localStorage.getItem("email")
+);
 
 interface messageObj {
   time?: Date;
   isMine?: boolean;
   content?: String;
-  sender?: String;
-  receiver?: String;
+  sender: String;
+  receiver: String;
 }
 
 interface chatListObj {
@@ -27,11 +30,10 @@ interface chatListObj {
 function ChatPage() {
   const location = useLocation();
   const { email } = location.state;
-
   const [receiverIdx, setReceiverIdx] = useState(0);
   const [message, setMessage] = useState<messageObj>({
     sender: email,
-    receiver: "1169969860@qq.com",
+    receiver: "1720344233@qq.com",
   });
   const [messageList, setMessageList] = useState<Array<messageObj>>([]);
   // const [chatList, setChatList] = useState(new Map());
@@ -50,14 +52,10 @@ function ChatPage() {
     },
   ]);
 
-  console.log("socket", socket);
-
   // Will be triggered when receiveing a message;
-  socket.onmessage = function (event: any) {
-    const newMessage: messageObj = {
-      isMine: false,
-      content: event.data,
-    };
+  socket.onmessage = function (e: any) {
+    const newMessage: messageObj = JSON.parse(e.data);
+    console.log(newMessage);
     setMessageList([...messageList, newMessage]);
   };
 
@@ -71,26 +69,29 @@ function ChatPage() {
   // };
 
   function sendMessage() {
-    setMessage({});
+    if (message.content == "") return;
+    if (!window.WebSocket) return;
+    if (socket.readyState != WebSocket.OPEN) {
+      // socket = new WebSocket("ws://39.99.133.150:8081/ws");
+      socket = new WebSocket("ws://127.0.0.1:8081/" + email);
+    }
+
     let chatInputBox = document.getElementById(
       "input-content"
     ) as HTMLTextAreaElement;
     setTimeout(() => {
       chatInputBox.value = "";
-      chatInputBox.textContent = "";
     }, 150);
 
-    if (!window.WebSocket) return;
-    if (socket.readyState != WebSocket.OPEN) {
-      socket = new WebSocket("ws://39.99.133.150:8081/ws");
-    }
-
+    setMessageList([...messageList, JSON.parse(JSON.stringify(message))]);
     socket.send(JSON.stringify(message));
+    message.content = "";
+    setMessage(message);
   }
 
   const settingPanel = (
     <div className={style["setting-panel"]}>
-      <p>content</p>
+      <div>Log Out</div>
     </div>
   );
 
@@ -98,7 +99,10 @@ function ChatPage() {
     <div className={style["container"]}>
       <div className={style["side-bar"]}>
         {/* <img className={style['avatar']} ></img> */}
-        <div className={style["avatar"]}></div>
+        <img
+          className={style["avatar"]}
+          src={require("./images/avatar.jpg")}
+        ></img>
         <Popover content={settingPanel} placement="right" trigger={"click"}>
           <img
             className={style["setting"]}
@@ -134,7 +138,10 @@ function ChatPage() {
                 }}
               >
                 <div className={style["chat-list-item-avatar-container"]}>
-                  <img className={style["chat-list-item-avatar"]}></img>
+                  <img
+                    className={style["chat-list-item-avatar"]}
+                    src={require("./images/avatar.jpg")}
+                  ></img>
                 </div>
                 <div className={style["chat-list-item-info"]}>
                   <div className={style["chat-list-item-username"]}>
@@ -158,12 +165,15 @@ function ChatPage() {
         </div>
 
         <div className={style["dialogue-content"]} id="dialogue-content">
-          {messageList.map((item: messageObj, key) => {
+          {messageList.map((item: messageObj, index: number) => {
             return (
               <>
-                {item.isMine ? (
+                {item.sender == email ? (
                   <div className={style["message-self"]}>
-                    <div className={style["message-avatar-self"]}></div>
+                    <img
+                      className={style["message-avatar-self"]}
+                      src={require("./images/avatar.jpg")}
+                    ></img>
                     <div className={style["arrow-self"]}></div>
                     <div className={style["message-content-self"]}>
                       {item?.content}
@@ -171,7 +181,10 @@ function ChatPage() {
                   </div>
                 ) : (
                   <div className={style["message"]}>
-                    <div className={style["message-avatar"]}></div>
+                    <img
+                      className={style["message-avatar"]}
+                      src={require("./images/avatar.jpg")}
+                    ></img>
                     <div className={style["arrow"]}></div>
                     <div className={style["message-content"]}>
                       {item?.content}
@@ -205,6 +218,7 @@ function ChatPage() {
             className={style["input-send-btn"]}
             onClick={() => {
               console.log(message);
+              sendMessage();
             }}
           >
             Send

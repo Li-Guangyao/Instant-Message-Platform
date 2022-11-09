@@ -20,7 +20,7 @@
 
     .avatar {
       width: 60%;
-      background-color: red;
+      // background-color: red;
 
       position: absolute;
       top: 20px;
@@ -36,6 +36,10 @@
       width: 70%;
       position: absolute;
       bottom: 35px;
+    }
+
+    .setting:hover {
+      cursor: pointer;
     }
   }
 
@@ -82,7 +86,7 @@
           display: flex;
 
           .chat-list-item-avatar {
-            background-color: blue;
+            // background-color: blue;
             margin: auto 10px;
             width: 41px;
             height: 41px;
@@ -115,16 +119,16 @@
         }
       }
 
-      .chosen{
+      .chosen {
         background-color: rgb(145, 145, 145) !important;
       }
 
-      .chat-list-item:hover{
+      .chat-list-item:hover {
         background-color: rgb(189, 188, 188);
         cursor: pointer;
       }
 
-      .chat-list-item:focus{
+      .chat-list-item:focus {
         background-color: pink;
       }
     }
@@ -208,7 +212,7 @@
         .message-avatar {
           width: 37px;
           height: 37px;
-          background-color: red;
+          // background-color: red;
 
           margin-right: 2px;
         }
@@ -285,25 +289,47 @@
       .input-send-btn {
         width: 65px;
         height: 30px;
-        background-color: grey;
+        background-color: rgb(190, 190, 190);
         position: absolute;
         bottom: 15px;
         right: 28px;
         display: flex;
         justify-content: center;
         align-items: center;
+        user-select: none;
+      }
+
+      .input-send-btn:hover {
+        cursor: pointer;
+      }
+
+      .input-send-btn:active {
+        background-color: grey;
       }
     }
   }
 }
 
 .setting-panel {
-  background-color: rgb(155, 165, 182);
+  background-color: #9ba5b6;
   width: 90px;
+  padding: 0 !important;
+  font-size: 15px;
+  margin: 5px auto;
+}
+
+.setting-panel:hover {
+  cursor: pointer;
+  user-select: none;
+}
+
+.setting-panel:active {
+  background-color: #555555;
 }
 
 :global(.ant-popover-arrow) {
   visibility: hidden;
+  background-color: #555555;
 }
 
 :global(.ant-popover-arrow-content::before) {
@@ -313,4 +339,8 @@
 :global(.ant-popover-inner-content) {
   padding: 0 0 0 10px !important;
   background-color: rgb(155, 165, 182);
+}
+
+:global(.ant-popover-inner-content:active) {
+  background-color: #555555;
 }

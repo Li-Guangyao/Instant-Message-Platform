@@ -4,26 +4,44 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { message } from "antd";
 import "antd/lib/message/style/index.css";
-import { clearInterval } from "timers";
-import {setInterval} from 'timers';
 
 interface User {
   username: string;
   password: string;
 }
+let timeChange: any;
 
 function RegistrationPage() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
-  const [countdown, setCountdown] = useState(60);
   const [emailAddress, setEmailAddress] = useState("");
   const [isEmailCorrect, setEmailCorrect] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
 
+  const [countdown, setCountdown] = useState(60);
+  const [isBtnDisabled, setIsBtnDisabled] = useState(false);
+  const [btnContent, setBtnContent] = useState("Send Verification Code");
+
   const [password, setPassword] = useState("");
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
 
-  let codeInput: string = "";
+  const [code, setCode] = useState("");
+
+  useEffect(() => {
+    clearInterval(timeChange);
+    return () => clearInterval(timeChange);
+  }, []);
+
+  useEffect(() => {
+    if (countdown > 0 && countdown < 60) {
+      setBtnContent(`Resend after ${countdown}s`);
+    } else {
+      clearInterval(timeChange);
+      setIsBtnDisabled(false);
+      setCountdown(60);
+      setBtnContent("Send Verification Code");
+    }
+  }, [countdown]);
 
   function login(): void {
     navigate("/");
@@ -42,14 +60,12 @@ function RegistrationPage() {
           email: emailAddress,
         })
         .then((res) => {
-          let temptimer = setInterval(() => {
+          setIsBtnDisabled(true);
+          timeChange = setInterval(function () {
             if (countdown > 0) {
-              setCountdown(countdown - 1);
+              setCountdown((countdown) => --countdown);
             }
-            let btn = document.getElementById("send-code-btn") as HTMLElement;
-            btn.innerText = countdown + "s";
           }, 1000);
-          clearInterval(temptimer);
         });
     }
   }
@@ -58,10 +74,15 @@ function RegistrationPage() {
     axios
       .post("http://127.0.0.1:8081/register/verify_code", {
         email: emailAddress,
-        code: codeInput,
+        code,
       })
       .then((res) => {
-        console.log("res", res);
+        if (res.data.status) {
+          message.success("Email verified successfully!");
+          setIsEmailVerified(true);
+        } else {
+          message.warn("You input a wrong code.");
+        }
       })
       .catch((err) => {
         console.log("err", err);
@@ -69,17 +90,28 @@ function RegistrationPage() {
   }
 
   function regisgter(): void {
-    axios
-      .post("http://127.0.0.1:8081/register", {
-        liguangyao: "name",
-        age: 56,
-      })
-      .then((res) => {
-        console.log("res", res);
-      })
-      .catch((err) => {
-        console.log("err", err);
-      });
+    if (!isEmailVerified) {
+      message.error("Your email is not verified!");
+    } else {
+      axios
+        .post("http://127.0.0.1:8081/register", {
+          username: username,
+          email: emailAddress,
+          password: password,
+        })
+        .then((res) => {
+          if (res.data.status == 200) {
+            localStorage.setItem("username", username);
+            localStorage.setItem("email", emailAddress);
+            navigate("/chat", { state: { email: emailAddress } });
+          } else {
+            message.warn(res.data.tip);
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    }
   }
 
   function inputEmail(e: any): void {
@@ -91,6 +123,7 @@ function RegistrationPage() {
     if (reg.test(email)) {
       setEmailCorrect(true);
       setEmailAddress(e.target.value);
+      setIsEmailVerified(false);
     } else {
       setEmailCorrect(false);
     }
@@ -134,10 +167,10 @@ function RegistrationPage() {
           )}
           <button
             className={style["send-code-btn"]}
-            id="send-code-btn"
+            disabled={isBtnDisabled}
             onClick={sendCode}
           >
-            Send Verification Code
+            {btnContent}
           </button>
         </div>
 
@@ -146,7 +179,7 @@ function RegistrationPage() {
             className={style["code-input-box"]}
             placeholder="Input the 6-bit code you received."
             onInput={(e: any) => {
-              codeInput = e.target.value;
+              setCode(e.target.value);
             }}
           ></input>
           {isEmailVerified ? (
@@ -160,7 +193,11 @@ function RegistrationPage() {
               src={require("./images/cross.png")}
             ></img>
           )}
-          <button className={style["verify-code-btn"]} onClick={verifyCode}>
+          <button
+            className={style["verify-code-btn"]}
+            onClick={verifyCode}
+            disabled={!isEmailCorrect || isEmailVerified}
+          >
             Verify Email
           </button>
         </div>
@@ -175,15 +212,15 @@ function RegistrationPage() {
             setPassword(e.target.value);
           }}
         ></input>
-        <h4>Reinput the password.</h4>
+        <h3>Reinput the password.</h3>
         <div className={style["password-reinput"]}>
           <input
             className={style["password-input"]}
             type="password"
             onInput={(e: any) => {
-              password == e.target.value
-                ? setIsPasswordVerified(true)
-                : setIsPasswordVerified(false);
+              if (e.target.value != "") {
+                setIsPasswordVerified(password == e.target.value);
+              }
             }}
           ></input>
           {isPasswordVerified ? (
@@ -205,7 +242,7 @@ function RegistrationPage() {
       </button>
 
       <div className={style["back-btn"]} onClick={goBack}>
-        &lt; -Go Back
+        &lt;- Go Back
       </div>
     </div>
   );
