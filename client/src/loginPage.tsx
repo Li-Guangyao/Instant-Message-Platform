@@ -85,6 +85,7 @@ export default function LoginPage() {
       <img
         className={style["avatar"]}
         src={require("./images/polyu.png")}
+        alt=""
       ></img>
 
       <input

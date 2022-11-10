@@ -1,9 +1,12 @@
-import { doesNotThrow } from "assert";
 import React, { useEffect, useState } from "react";
-import { Input, Popover } from "antd";
+import { message as antdmessage, Input, Popconfirm, Popover } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+
 import style from "./chatPage.module.css";
 import "antd/lib/popover/style/index.css";
+import "antd/lib/message/style/index.css";
+import "antd/lib/popconfirm/style/index.css";
 
 const { TextArea } = Input;
 
@@ -30,13 +33,16 @@ interface chatListObj {
 function ChatPage() {
   const location = useLocation();
   const { email } = location.state;
+  const navigate = useNavigate();
+
+  const [searchStr, setSearchStr] = useState("");
+
   const [receiverIdx, setReceiverIdx] = useState(0);
   const [message, setMessage] = useState<messageObj>({
     sender: email,
     receiver: "1720344233@qq.com",
   });
   const [messageList, setMessageList] = useState<Array<messageObj>>([]);
-  // const [chatList, setChatList] = useState(new Map());
   const [chatList, setChatList] = useState<Array<chatListObj>>([
     {
       username: "Li Guangyao",
@@ -60,18 +66,21 @@ function ChatPage() {
   };
 
   socket.onopen = function (event: any) {
-    console.log("Websocket established.");
+    console.log("Websocket connected.");
   };
 
-  // socket.onclose = function (event:any) {
-  //   let ta = document.getElementById("responseText") as HTMLTextAreaElement;
-  //   ta.value = ta.value + "连接被关闭";
-  // };
+  socket.onclose = function (event: any) {
+    console.log("Websocket disconnected.");
+  };
+
+  useEffect(() => {
+    changeChat(0);
+  }, []);
 
   function sendMessage() {
     if (message.content == "") return;
     if (!window.WebSocket) return;
-    if (socket.readyState != WebSocket.OPEN) {
+    if (socket.readyState !== WebSocket.OPEN) {
       // socket = new WebSocket("ws://39.99.133.150:8081/ws");
       socket = new WebSocket("ws://127.0.0.1:8081/" + email);
     }
@@ -85,13 +94,68 @@ function ChatPage() {
 
     setMessageList([...messageList, JSON.parse(JSON.stringify(message))]);
     socket.send(JSON.stringify(message));
+
+    // 重设，等待下一个消息输入
     message.content = "";
     setMessage(message);
   }
 
+  function searchUser() {
+    axios
+      .post("http://127.0.0.1:8081/chat/search_user", {
+        email: searchStr,
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.data.code == 200) {
+          let user = JSON.parse(res.data.data.user);
+          let newChat: chatListObj = {
+            username: user.username,
+            email: user.email,
+            messageList: [],
+            lastMessageTime: new Date(),
+          };
+          changeChat(0, newChat);
+        } else if (res.data.code == 404) {
+          antdmessage.warn(res.data.msg);
+        }
+      });
+  }
+
+  function changeChat(index: number, newChat?: chatListObj) {
+    // 保存聊天数据
+    chatList[receiverIdx].messageList = JSON.parse(JSON.stringify(messageList));
+    setChatList(chatList);
+
+    if (newChat) {
+      // 设置新的聊天数据
+      setMessageList([]);
+      setChatList([newChat, ...chatList]);
+    } else {
+      // 改变接收者的值
+      setReceiverIdx(index);
+      // 设置新的聊天数据
+      setMessageList(JSON.parse(JSON.stringify(chatList[index].messageList)));
+    }
+
+    let temp = document.getElementById(
+      "chat-list-item" + receiverIdx
+    ) as HTMLElement;
+    temp.className = temp.className.split(" ")[0];
+    (
+      document.getElementById("chat-list-item" + index) as HTMLElement
+    ).className += " " + style["chosen"];
+    document.getElementById("input-content")?.focus();
+  }
+
+  function logout() {
+    navigate("../login");
+  }
+
   const settingPanel = (
     <div className={style["setting-panel"]}>
-      <div>Log Out</div>
+      <div onClick={logout}>Log out</div>
+      {/* <img className={style["setting-panel-logout"]} src={require("./images/logout.png")}></img> */}
     </div>
   );
 
@@ -102,11 +166,13 @@ function ChatPage() {
         <img
           className={style["avatar"]}
           src={require("./images/avatar.jpg")}
+          alt=""
         ></img>
         <Popover content={settingPanel} placement="right" trigger={"click"}>
           <img
             className={style["setting"]}
             src={require("./images/setting.png")}
+            alt=""
           ></img>
         </Popover>
       </div>
@@ -115,7 +181,15 @@ function ChatPage() {
         <div className={style["search-box"]}>
           <input
             className={style["search-input"]}
-            placeholder="Type to Search"
+            placeholder="Type to Search Users"
+            onInput={(e: any) => {
+              setSearchStr(e.target.value);
+            }}
+            onKeyDown={(e: any) => {
+              if (e.code === "Enter") {
+                searchUser();
+              }
+            }}
           ></input>
         </div>
         <div className={style["chat-list"]}>
@@ -126,21 +200,14 @@ function ChatPage() {
                 id={"chat-list-item" + index}
                 key={index}
                 onClick={() => {
-                  let temp = document.getElementById(
-                    "chat-list-item" + receiverIdx
-                  ) as HTMLElement;
-                  temp.className = temp.className.split(" ")[0];
-                  setReceiverIdx(index);
-                  temp = document.getElementById(
-                    "chat-list-item" + index
-                  ) as HTMLElement;
-                  temp.className += " " + style["chosen"];
+                  changeChat(index);
                 }}
               >
                 <div className={style["chat-list-item-avatar-container"]}>
                   <img
                     className={style["chat-list-item-avatar"]}
                     src={require("./images/avatar.jpg")}
+                    alt=""
                   ></img>
                 </div>
                 <div className={style["chat-list-item-info"]}>
@@ -173,6 +240,7 @@ function ChatPage() {
                     <img
                       className={style["message-avatar-self"]}
                       src={require("./images/avatar.jpg")}
+                      alt=""
                     ></img>
                     <div className={style["arrow-self"]}></div>
                     <div className={style["message-content-self"]}>
@@ -184,6 +252,7 @@ function ChatPage() {
                     <img
                       className={style["message-avatar"]}
                       src={require("./images/avatar.jpg")}
+                      alt=""
                     ></img>
                     <div className={style["arrow"]}></div>
                     <div className={style["message-content"]}>

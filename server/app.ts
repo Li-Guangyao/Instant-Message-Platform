@@ -1,6 +1,8 @@
 import registerRouter from "./router/register";
 import loginRouter from "./router/login";
 import systemRouter from "./router/system";
+import chatRouter from "./router/chat";
+
 import { verifyToken } from "./manager/jwt";
 import express from "express";
 import WSS from "./manager/websocket";
@@ -19,6 +21,7 @@ app.get("/", function (req: any, res: any) {
 app.use("/register", registerRouter);
 app.use("/login", loginRouter);
 app.use("/system", systemRouter);
+app.use("/chat", chatRouter);
 
 const server = app.listen(process.env.SERVER_PORT, () => {
   const host: any = server.address();

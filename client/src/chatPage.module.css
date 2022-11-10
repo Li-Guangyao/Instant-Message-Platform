@@ -4,7 +4,7 @@
   height: 600px;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -53%);
   background-color: red;
   display: flex;
   flex-direction: row;
@@ -87,6 +87,7 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  user-select: none;
 }
 .container .info-bar .chat-list .chat-list-item .chat-list-item-info .chat-list-item-lastmessage {
   height: 60%;
@@ -95,6 +96,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  user-select: none;
 }
 .container .info-bar .chat-list .chosen {
   background-color: #919191 !important;

@@ -100,7 +100,7 @@ function RegistrationPage() {
           password: password,
         })
         .then((res) => {
-          if (res.data.status == 200) {
+          if (res.data.status === 200) {
             localStorage.setItem("username", username);
             localStorage.setItem("email", emailAddress);
             navigate("/chat", { state: { email: emailAddress } });
@@ -158,11 +158,13 @@ function RegistrationPage() {
             <img
               className={style["status-sign"]}
               src={require("./images/check.png")}
+              alt=""
             ></img>
           ) : (
             <img
               className={style["status-sign"]}
               src={require("./images/cross.png")}
+              alt=""
             ></img>
           )}
           <button
@@ -186,11 +188,13 @@ function RegistrationPage() {
             <img
               className={style["status-sign"]}
               src={require("./images/check.png")}
+              alt=""
             ></img>
           ) : (
             <img
               className={style["status-sign"]}
               src={require("./images/cross.png")}
+              alt=""
             ></img>
           )}
           <button
@@ -218,8 +222,8 @@ function RegistrationPage() {
             className={style["password-input"]}
             type="password"
             onInput={(e: any) => {
-              if (e.target.value != "") {
-                setIsPasswordVerified(password == e.target.value);
+              if (e.target.value !== "") {
+                setIsPasswordVerified(password === e.target.value);
               }
             }}
           ></input>
@@ -227,11 +231,13 @@ function RegistrationPage() {
             <img
               className={style["status-sign"]}
               src={require("./images/check.png")}
+              alt=""
             ></img>
           ) : (
             <img
               className={style["status-sign"]}
               src={require("./images/cross.png")}
+              alt=""
             ></img>
           )}
         </div>
