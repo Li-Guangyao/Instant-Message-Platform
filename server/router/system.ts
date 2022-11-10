@@ -19,8 +19,7 @@ router.post("/change_password", async (req: Request, res: Response) => {
 
 router.post("/verify_token", async (req: Request, res: Response) => {
   console.log("verify_token")
-  // res.send("verify_token")
-  res.send(verifyToken(req, res)) 
+  res.json(verifyToken(req, res)) 
 });
 
 function uploadImage() {}

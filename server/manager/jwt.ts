@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 const secretKey = "secretKey";
 
 export function generateToken(payload) {
-  const token: any =
+  const token =
     "Bearer " +
     jwt.sign(payload, secretKey, {
       expiresIn: "1h",
@@ -17,10 +17,10 @@ export function verifyToken(req: Request, res?: Response, next?) {
   jwt.verify(token, secretKey, function (err: any, decoded) {
     if (err) {
       console.log("verify error", err);
-      return res.json({ code: 404, msg: "token无效" });
+      return res.json({ status: 404, msg: "token invalid." });
     } else {
       console.log("verify decoded", decoded);
-      return res.json({ code: 200, msg: "token有效" });
+      return res.json({ status: 200, msg: "token valid." });
     }
     next();
   });

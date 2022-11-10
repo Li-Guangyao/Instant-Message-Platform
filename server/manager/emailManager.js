@@ -5,7 +5,7 @@ dotenv.config();
 let transporter = nodemailer.createTransport({
   //node_modules/nodemailer/lib/well-known/services.json  查看相关的配置，如果使用qq邮箱，就查看qq邮箱的相关配置
   host: process.env.EMAIL_HOST,
-  service: "163", //类型qq邮箱
+  service: process.env.EMAIL_SERVICE, //类型qq邮箱
   port: process.env.EMAIL_PORT,
   secure: true, // true for 465, false for other ports
   auth: {
@@ -28,7 +28,7 @@ function sendMail(mail, code, call) {
   let mailOptions = {
     from: '"Li Guangyao" <15937106471@163.com>', // 发送方
     to: mail, //接收者邮箱，多个邮箱用逗号间隔
-    subject: 'Welcome to Websocket-based IM app', // 标题
+    subject: 'Welcome to Online Chat App', // 标题
     text: "Hello world?", // 文本内容
     html: emailContent
     // attachments: [{//发送文件

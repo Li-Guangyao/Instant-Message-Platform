@@ -1,5 +1,4 @@
 import { Router, Response, Request } from "express";
-import { register } from "ts-node";
 import redisManager from "../manager/redisManager";
 import User from "../models/User";
 
@@ -8,8 +7,7 @@ const router: Router = Router();
 
 // 执行注册功能
 router.post("/", async (req: Request, res: Response) => {
-  const data = req.body;
-  const { username, email, password } = data;
+  const { username, email, password } = req.body.data;
   User.findOrCreate({
     where: { email },
     defaults: {
@@ -21,34 +19,48 @@ router.post("/", async (req: Request, res: Response) => {
     if (e[1]) {
       res.json({
         status: 200,
-        tip: "Create user successfully.",
+        msg: "Create user successfully.",
       });
     } else {
       res.json({
         status: 404,
-        tip: "User already exists.",
+        msg: "User already exists.",
       });
     }
   });
 });
 
 router.post("/send_code", async (req: Request, res: Response) => {
-  const data = req.body;
-  const { email } = data;
-  sendCode(email);
-  res.json({
-    tip: "Send a authorization code.",
-    status: 200,
+  const { email } = req.body;
+
+  let targetUser = await User.findOne({
+    attributes: ["username", "email"],
+    where: { email },
   });
+  if (targetUser) {
+    res.json({
+      status: 404,
+      msg: "The email has been registered, please change one.",
+    });
+  } else {
+    res.json({
+      status: 200,
+      msg: "Send a authorization code.",
+    });
+  }
 });
 
 router.post("/verify_code", async (req: Request, res: Response) => {
-  const data = req.body;
-  const { email, code } = data;
+  const { email, code } = req.body.data;
   res.json({
     status: await verifyCode(email, code),
   });
 });
+
+function generateCode(): string {
+  const res = "" + Math.round(Math.random() * 1000000);
+  return res;
+}
 
 function sendCode(email: string): void {
   const code = generateCode();
@@ -60,15 +72,10 @@ function sendCode(email: string): void {
   redisManager.set(email, JSON.stringify(codeObj));
 }
 
-function generateCode(): string {
-  const res = "" + Math.round(Math.random() * 1000000);
-  return res;
-}
-
-async function verifyCode(email: string, code: string): Promise<any> {
+async function verifyCode(email: string, code: string) {
   const codeObj = JSON.parse(await redisManager.get(email));
   console.log("code", code);
-  if (codeObj && Date.now() < codeObj.expireTime) {
+  if (codeObj && Date.now() <= codeObj.expireTime) {
     return codeObj.code == code;
   } else {
     return false;

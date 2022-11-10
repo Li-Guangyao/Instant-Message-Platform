@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { message as antdmessage, Input, Popconfirm, Popover } from "antd";
+import { message as antdmessage, Popover } from "antd";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
@@ -8,53 +8,57 @@ import "antd/lib/popover/style/index.css";
 import "antd/lib/message/style/index.css";
 import "antd/lib/popconfirm/style/index.css";
 
-const { TextArea } = Input;
-
 // let socket = new WebSocket("ws://39.99.133.150:8082/ws");
-let socket: any = new WebSocket(
-  "ws://127.0.0.1:8081/" + localStorage.getItem("email")
-);
+let email = localStorage.getItem("email") as string;
+let socket: WebSocket = new WebSocket("ws://127.0.0.1:8081/" + email);
 
 interface messageObj {
   time?: Date;
   isMine?: boolean;
-  content?: String;
-  sender: String;
-  receiver: String;
+  content: string;
+  sender: string;
+  receiver: string;
 }
 
 interface chatListObj {
-  username: String;
-  email: String;
+  username: string;
+  email: string;
   messageList: Array<messageObj>;
   lastMessageTime: Date;
+  unsentMessage: string;
 }
 
 function ChatPage() {
   const location = useLocation();
-  const { email } = location.state;
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state) {
+      email = location.state.email;
+    } else {
+      navigate("../login");
+    }
+  }, []);
+
+  console.log("email", email);
 
   const [searchStr, setSearchStr] = useState("");
 
   const [receiverIdx, setReceiverIdx] = useState(0);
   const [message, setMessage] = useState<messageObj>({
     sender: email,
-    receiver: "1720344233@qq.com",
+    receiver: "",
+    content: "",
   });
+
   const [messageList, setMessageList] = useState<Array<messageObj>>([]);
   const [chatList, setChatList] = useState<Array<chatListObj>>([
     {
-      username: "Li Guangyao",
-      email: "1169969860@qq.com",
+      username: "AI Robot",
+      email: "22042527g@connect.polyu.hk",
       messageList: [],
       lastMessageTime: new Date(),
-    },
-    {
-      username: "Li Goudan",
-      email: "1169969860@qq.com",
-      messageList: [],
-      lastMessageTime: new Date(),
+      unsentMessage: "",
     },
   ]);
 
@@ -78,19 +82,23 @@ function ChatPage() {
   }, []);
 
   function sendMessage() {
-    if (message.content == "") return;
-    if (!window.WebSocket) return;
+    if (message.content.length == 0 || !window.WebSocket) {
+      return;
+    }
+
+    message.sender = email;
+    message.receiver = chatList[receiverIdx].email;
+    message.time = new Date();
+    setMessage(message);
+    console.log(message);
+
     if (socket.readyState !== WebSocket.OPEN) {
       // socket = new WebSocket("ws://39.99.133.150:8081/ws");
       socket = new WebSocket("ws://127.0.0.1:8081/" + email);
     }
 
-    let chatInputBox = document.getElementById(
-      "input-content"
-    ) as HTMLTextAreaElement;
-    setTimeout(() => {
-      chatInputBox.value = "";
-    }, 150);
+    (document.getElementById("input-content") as HTMLTextAreaElement).value =
+      "";
 
     setMessageList([...messageList, JSON.parse(JSON.stringify(message))]);
     socket.send(JSON.stringify(message));
@@ -114,8 +122,11 @@ function ChatPage() {
             email: user.email,
             messageList: [],
             lastMessageTime: new Date(),
+            unsentMessage: "",
           };
           changeChat(0, newChat);
+          (document.getElementById("search-input") as HTMLInputElement).value =
+            "";
         } else if (res.data.code == 404) {
           antdmessage.warn(res.data.msg);
         }
@@ -123,8 +134,12 @@ function ChatPage() {
   }
 
   function changeChat(index: number, newChat?: chatListObj) {
+    let textarea = document.getElementById(
+      "input-content"
+    ) as HTMLTextAreaElement;
     // 保存聊天数据
     chatList[receiverIdx].messageList = JSON.parse(JSON.stringify(messageList));
+    chatList[receiverIdx].unsentMessage = textarea.value;
     setChatList(chatList);
 
     if (newChat) {
@@ -145,7 +160,8 @@ function ChatPage() {
     (
       document.getElementById("chat-list-item" + index) as HTMLElement
     ).className += " " + style["chosen"];
-    document.getElementById("input-content")?.focus();
+    textarea.focus();
+    textarea.value = chatList[index].unsentMessage;
   }
 
   function logout() {
@@ -181,12 +197,13 @@ function ChatPage() {
         <div className={style["search-box"]}>
           <input
             className={style["search-input"]}
+            id="search-input"
             placeholder="Type to Search Users"
             onInput={(e: any) => {
               setSearchStr(e.target.value);
             }}
             onKeyDown={(e: any) => {
-              if (e.code === "Enter") {
+              if (e.code === "Enter" || e.code == "NumpadEnter") {
                 searchUser();
               }
             }}
@@ -215,7 +232,9 @@ function ChatPage() {
                     {item.username}
                   </div>
                   <div className={style["chat-list-item-lastmessage"]}>
-                    Hello, nice to meet you!{" "}
+                    {chatList[index].messageList.length > 0
+                      ? chatList[index].messageList.slice(-1)[0].content
+                      : ""}
                   </div>
                 </div>
               </div>
@@ -267,26 +286,24 @@ function ChatPage() {
 
         <div className={style["input-box"]}>
           {/* <div className={style['input-function']}>123</div> */}
-          <TextArea
+          <textarea
             className={style["input-content"]}
             id="input-content"
-            onChange={(e: any) => {
-              let tempMessage = JSON.parse(JSON.stringify(message));
-              tempMessage.time = new Date();
-              tempMessage.sender = email;
-              tempMessage.content = e.target.value;
-              setMessage(tempMessage);
+            disabled={chatList.length == 0}
+            onInput={(e: any) => {
+              message.content = e.target.value;
+              setMessage(message);
             }}
-            onPressEnter={(e: React.KeyboardEvent) => {
+            onKeyUp={(e: React.KeyboardEvent) => {
               e.preventDefault();
-              sendMessage();
+              if (e.code == "Enter" || e.code == "NumpadEnter") {
+                sendMessage();
+              }
             }}
-            bordered={false}
-          ></TextArea>
+          ></textarea>
           <div
             className={style["input-send-btn"]}
             onClick={() => {
-              console.log(message);
               sendMessage();
             }}
           >

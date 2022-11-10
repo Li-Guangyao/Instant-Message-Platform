@@ -19,7 +19,6 @@ export default function WSS(server: any) {
     // console.log(`${clientName} is connected`);
     // console.log(req.connection);
     // 发送欢迎信息给客户端
-
     // ws.send("Welcome :" + "加入聊天室");
     // ws.send(JSON.stringify(client));
 
@@ -36,16 +35,25 @@ export default function WSS(server: any) {
       // console.log("-----------------------------");
 
       const messageObj = JSON.parse(message);
-      console.log("messgeObj", messageObj);
+      // console.log("messgeObj", messageObj);
+      const senderStr = messageObj.sender;
       const receiverStr = messageObj.receiver;
-      console.log("receiverStr", messageObj.receiver);
+      // console.log("receiverStr", messageObj.receiver);
+      const senderObj = wsClients.get(senderStr);
       const receiverObj = wsClients.get(receiverStr);
-      console.log("receiverObj", receiverObj);
-      console.log(wsClients);
+      // console.log("receiverObj", receiverObj);
+      // console.log(wsClients);
 
       if (receiverObj instanceof WebSocket) {
-        if (receiverObj.readyState === WebSocket.OPEN) {
+        if (receiverObj.readyState == WebSocket.OPEN) {
           receiverObj.send("" + message);
+        } else if (senderObj.readyState == WebSocket.OPEN) {
+          let systemMessge = {
+            sender: "system",
+            receiver: senderStr,
+            content: "Receiver unreachable.",
+          };
+          senderObj.send("" + systemMessge);
         }
       }
 

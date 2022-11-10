@@ -5,10 +5,6 @@ import axios from "axios";
 import { message } from "antd";
 import "antd/lib/message/style/index.css";
 
-interface User {
-  username: string;
-  password: string;
-}
 let timeChange: any;
 
 function RegistrationPage() {
@@ -43,12 +39,8 @@ function RegistrationPage() {
     }
   }, [countdown]);
 
-  function login(): void {
-    navigate("/");
-  }
-
   function goBack() {
-    navigate(-1);
+    navigate("../login");
   }
 
   function sendCode(): void {
@@ -56,16 +48,22 @@ function RegistrationPage() {
       message.warn("Email Address Format Incorrect.");
     } else {
       axios
-        .post("http://127.0.0.1:8081/register/send_code", {
-          email: emailAddress,
-        })
+        .post("http://127.0.0.1:8081/register/send_code",
+          {
+            email: emailAddress,
+          }
+        )
         .then((res) => {
-          setIsBtnDisabled(true);
-          timeChange = setInterval(function () {
-            if (countdown > 0) {
-              setCountdown((countdown) => --countdown);
-            }
-          }, 1000);
+          if (res.data.status == 404) {
+            message.warn(res.data.msg);
+          } else {
+            setIsBtnDisabled(true);
+            timeChange = setInterval(function () {
+              if (countdown > 0) {
+                setCountdown((countdown) => --countdown);
+              }
+            }, 1000);
+          }
         });
     }
   }
@@ -105,7 +103,7 @@ function RegistrationPage() {
             localStorage.setItem("email", emailAddress);
             navigate("/chat", { state: { email: emailAddress } });
           } else {
-            message.warn(res.data.tip);
+            message.warn(res.data.msg);
           }
         })
         .catch((err) => {
@@ -140,6 +138,7 @@ function RegistrationPage() {
           onInput={(e: any) => {
             setUsername(e.target.value);
           }}
+          autoComplete= {"off"}
         ></input>
       </div>
 
@@ -153,6 +152,7 @@ function RegistrationPage() {
             onInput={(e) => {
               inputEmail(e);
             }}
+            autoComplete= {"off"}
           ></input>
           {isEmailCorrect ? (
             <img
@@ -183,6 +183,7 @@ function RegistrationPage() {
             onInput={(e: any) => {
               setCode(e.target.value);
             }}
+            autoComplete= {"off"}
           ></input>
           {isEmailVerified ? (
             <img

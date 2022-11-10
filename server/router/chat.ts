@@ -1,6 +1,4 @@
-// login.js
 import express from "express";
-import { generateToken } from "../manager/jwt";
 import User from "../models/User";
 const router = express.Router();
 

@@ -11,25 +11,22 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const location = useLocation();
 
-  interface UserInfo {
-    username: String;
-    email: string;
-  }
-
   //   Check if the token stored in localstorage expired, if not, users will be directed to chat page without authentication.
   useEffect(() => {
-    // If users access from home path(/), then it will check the token information;
-    // If users access from login path(/login), then nothing will be done.
+    // 从主页能直接跳转到login
+    // 如果是从index跳转到login，且本地的token没有过期，就直接登录到chat页面，不用再操作
+    // 如果从其他页面来的，不能直接登录，因为register,chat也能跳到login，如果直接登录，用户就不能进行操作了
+
     if (location.pathname != "/") return;
 
-    const token: any = localStorage.getItem("token");
-    const user: any = localStorage.getItem("user");
-    if (token && user) {
+    const token = localStorage.getItem("token");
+    const email: any = localStorage.getItem("user");
+    if (token && email) {
       axios
         .post(
           "http://127.0.0.1:8081/system/verify_token",
           {
-            email: user.email,
+            email,
           },
           {
             headers: {
@@ -39,10 +36,10 @@ export default function LoginPage() {
         )
         .then((res: any) => {
           console.log("verify_token", res);
-          if (res.data.code == 200) {
+          if (res.data.status == 200) {
             navigate("/chat", {
               state: {
-                email: email,
+                email,
               },
             });
           } else {
@@ -50,12 +47,14 @@ export default function LoginPage() {
             navigate("/login");
           }
         });
-    } else {
-      navigate("/login");
     }
   }, []);
 
   function login(): void {
+    if (email.length == 0 || password.length == 0) {
+      message.warn("Please input email and password.");
+      return;
+    }
     axios
       .post("http://127.0.0.1:8081/login", {
         email: email,
@@ -63,7 +62,8 @@ export default function LoginPage() {
       })
       .then((res) => {
         const body = res.data;
-        if (body.code == 200) {
+        if (body.status == 200) {
+          message.success(res.data.msg);
           localStorage.setItem("email", email);
           localStorage.setItem("token", body.data.token);
           navigate("/chat", {
@@ -72,11 +72,8 @@ export default function LoginPage() {
             },
           });
         } else {
-          message.warn("Wrong Password, or the user doesn't exist.");
+          message.warn(res.data.msg);
         }
-      })
-      .catch((err) => {
-        console.log("err", err);
       });
   }
 
@@ -101,6 +98,11 @@ export default function LoginPage() {
         type={"password"}
         onInput={(e: any) => {
           setPassword(e.target.value);
+        }}
+        onKeyUp={(e) => {
+          if (e.code == "Enter" || e.code == "NumpadEnter") {
+            login();
+          }
         }}
       ></input>
 

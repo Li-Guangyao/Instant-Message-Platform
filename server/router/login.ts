@@ -16,7 +16,7 @@ router.post("/", async (req: Request, res: Response) => {
 
   if (count == 0) {
     res.json({
-      code: 404,
+      status: 404,
       msg: "There is no user, or you input the wrong password.",
     });
   } else if (rows.length == 1) {
@@ -25,7 +25,7 @@ router.post("/", async (req: Request, res: Response) => {
     });
 
     res.json({
-      code: 200,
+      status: 200,
       msg: "Log in successfully.",
       data: {
         token,

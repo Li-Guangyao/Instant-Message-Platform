@@ -30,7 +30,7 @@
 // });
 
 import {Sequelize} from 'sequelize-typescript';
-import User from '../models/User'
+import dotenv from 'dotenv'
 
 console.log('Init sequelize for mysql...');
 
@@ -39,7 +39,7 @@ export let sequelize = new Sequelize('imapp', 'imappuser', 'qwer1234', {
     port: 3306,
     dialect: 'mysql',
     pool: {
-        max: 5,
+        max: 100,
         min: 0,
         idle: 10000
     }
