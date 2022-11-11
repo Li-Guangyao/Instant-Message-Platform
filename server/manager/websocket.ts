@@ -44,6 +44,26 @@ export default function WSS(server: any) {
       // console.log("receiverObj", receiverObj);
       // console.log(wsClients);
 
+      if (receiverStr == "robot") {
+        const template = [
+          "How's the weather today?",
+          "You look handsome.",
+          "Nice to chat with you.",
+          "The application is created by Li Guangyao.",
+          "Ha Ha Ha Ha Ha Ha Ha.",
+        ];
+
+        let systemMessge = {
+          sender: "robot",
+          senderName: "robot",
+          receiver: senderStr,
+          receivername: message.senderName,
+          content: template[Math.round(Math.random() * 4)],
+        };
+
+        senderObj.send(JSON.stringify(systemMessge));
+      }
+
       if (receiverObj instanceof WebSocket) {
         if (receiverObj.readyState == WebSocket.OPEN) {
           receiverObj.send("" + message);
@@ -53,7 +73,7 @@ export default function WSS(server: any) {
             receiver: senderStr,
             content: "Receiver unreachable.",
           };
-          senderObj.send("" + systemMessge);
+          senderObj.send(JSON.stringify(systemMessge));
         }
       }
 

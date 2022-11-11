@@ -5,13 +5,12 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -53%);
-  background-color: red;
   display: flex;
   flex-direction: row;
 }
 .container .side-bar {
   width: 7%;
-  background-color: rgba(150, 174, 192, 0.948);
+  background-color: #707070;
   position: relative;
   display: flex;
   justify-content: center;
@@ -125,25 +124,26 @@
   font-size: large;
 }
 .container .dialogue-panel .dialogue-content {
-  position: absolute;
-  overflow: scroll;
-  top: 10%;
   bottom: 30%;
   width: 100%;
-  overflow-x: hidden;
+  height: 60%;
+  height: 360px;
 }
-.container .dialogue-panel .dialogue-content .message-self {
+.container .dialogue-panel .dialogue-content .dialogue-content-scroll {
+  height: 100%;
+  overflow-y: scroll;
+}
+.container .dialogue-panel .dialogue-content .dialogue-content-scroll .message-self {
   display: flex;
   flex-direction: row-reverse;
   margin: 20px;
 }
-.container .dialogue-panel .dialogue-content .message-self .message-avatar-self {
+.container .dialogue-panel .dialogue-content .dialogue-content-scroll .message-self .message-avatar-self {
   width: 37px;
   height: 37px;
-  background-color: red;
   margin-right: 2px;
 }
-.container .dialogue-panel .dialogue-content .message-self .arrow-self {
+.container .dialogue-panel .dialogue-content .dialogue-content-scroll .message-self .arrow-self {
   background-color: #bfbebe;
   margin: 10px 0;
   transform: rotate(45deg);
@@ -153,7 +153,7 @@
   position: relative;
   left: -6px;
 }
-.container .dialogue-panel .dialogue-content .message-self .message-content-self {
+.container .dialogue-panel .dialogue-content .dialogue-content-scroll .message-self .message-content-self {
   min-height: 15px;
   max-width: 380px;
   width: fit-content;
@@ -164,17 +164,17 @@
   font-size: 15px;
   word-wrap: break-word;
 }
-.container .dialogue-panel .dialogue-content .message {
+.container .dialogue-panel .dialogue-content .dialogue-content-scroll .message {
   display: flex;
   flex-direction: row;
   margin: 20px;
 }
-.container .dialogue-panel .dialogue-content .message .message-avatar {
+.container .dialogue-panel .dialogue-content .dialogue-content-scroll .message .message-avatar {
   width: 37px;
   height: 37px;
   margin-right: 2px;
 }
-.container .dialogue-panel .dialogue-content .message .arrow {
+.container .dialogue-panel .dialogue-content .dialogue-content-scroll .message .arrow {
   background-color: #bfbebe;
   margin: 10px 0;
   transform: rotate(45deg);
@@ -184,7 +184,7 @@
   position: relative;
   left: 5px;
 }
-.container .dialogue-panel .dialogue-content .message .message-content {
+.container .dialogue-panel .dialogue-content .dialogue-content-scroll .message .message-content {
   min-height: 15px;
   max-width: 380px;
   width: fit-content;
@@ -194,6 +194,9 @@
   padding: 10px;
   font-size: 15px;
   word-wrap: break-word;
+}
+.container .dialogue-panel .dialogue-content:last-child {
+  background-color: red;
 }
 .container .dialogue-panel .input-box {
   position: absolute;

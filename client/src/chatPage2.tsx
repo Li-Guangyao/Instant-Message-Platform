@@ -14,29 +14,26 @@ let username = localStorage.getItem("username") as string;
 let socket: WebSocket = new WebSocket("ws://127.0.0.1:8081/" + email);
 
 interface messageObj {
+  time: Date;
+  isMine?: boolean;
+  content: string;
   sender: string;
   senderName: string;
   receiver: string;
   receiverName: string;
-  content: string;
-  time?: Date;
 }
 
 interface chatListObj {
   username: string;
   email: string;
   messageList: Array<messageObj>;
-  lastMessageContent: string;
+  lastMessageTime: Date;
   unsentMessage: string;
 }
 
 function ChatPage() {
   const location = useLocation();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    changeChat(0);
-  }, []);
 
   useEffect(() => {
     if (location.state) {
@@ -46,76 +43,49 @@ function ChatPage() {
     }
   }, []);
 
+  console.log("email", email);
+
   const [searchStr, setSearchStr] = useState("");
+
+  const [receiverIdx, setReceiverIdx] = useState(0);
   const [message, setMessage] = useState<messageObj>({
     sender: email,
     senderName: username,
     receiver: "",
     receiverName: "",
     content: "",
+    time: new Date(),
   });
 
-  const [receiverIdx, setReceiverIdx] = useState(0);
   const [messageList, setMessageList] = useState<Array<messageObj>>([]);
   const [chatList, setChatList] = useState<Array<chatListObj>>([
     {
       username: "AI Robot",
-      email: "robot",
+      email: "22042527g@connect.polyu.hk",
       messageList: [],
-      lastMessageContent: "hello",
+      lastMessageTime: new Date(),
       unsentMessage: "",
     },
   ]);
 
-  useEffect(() => {
-    console.log("receiveIdx改变", receiverIdx);
-    (
-      document.getElementById("chat-list-item" + receiverIdx) as HTMLElement
-    ).className += " " + style["chosen"];
-  }, [receiverIdx]);
-
   // Will be triggered when receiveing a message;
   socket.onmessage = function (e: any) {
     const newMessage: messageObj = JSON.parse(e.data);
-    console.log(receiverIdx);
-
-    if (newMessage.sender == "system") {
+    console.log(newMessage);
+    const sender = newMessage.sender;
+    if (sender == "system") {
       antdmessage.warn(message.content);
     } else {
-      // 三种情况
-      // 1. 用户就是当前聊天对象
-      // 2. 用户在当前列表中，但不是当前聊天
-      // 3. 用户不在当前列表中
-      if (chatList[receiverIdx].email == newMessage.sender) {
-        setMessageList([...messageList, newMessage]);
-        chatList[receiverIdx].lastMessageContent = newMessage.content;
-        setChatList(JSON.parse(JSON.stringify(chatList)));
-        return;
-      }
-
-      for (let i = 0; i < chatList.length; i++) {
+      for (let i = 0; i <= chatList.length; i++) {
         if (chatList[i].email == newMessage.sender) {
           chatList[i].messageList.push(newMessage);
-          chatList[i].lastMessageContent = newMessage.content;
-          setChatList(JSON.parse(JSON.stringify(chatList)));
-          return;
+        }
+        if (i == chatList.length) {
+          chatList;
         }
       }
-
-      let newChat: chatListObj = {
-        username: newMessage.senderName,
-        email: newMessage.sender,
-        messageList: [newMessage],
-        lastMessageContent: newMessage.content,
-        unsentMessage: "",
-      };
-      setChatList([newChat, ...chatList]);
-      setReceiverIdx((receiverIdx) => receiverIdx + 1);
-      let temp = document.getElementById("chat-list-item0") as HTMLElement;
-      temp.className = temp.className.split(" ")[0];
     }
-
-    autoScroll();
+    setMessageList([...messageList, newMessage]);
   };
 
   socket.onopen = function (event: any) {
@@ -126,17 +96,23 @@ function ChatPage() {
     console.log("Websocket disconnected.");
   };
 
+  useEffect(() => {
+    changeChat(0);
+  }, []);
+
   function sendMessage() {
-    if (message.content.length == 0 || !window.WebSocket) return;
+    if (message.content.length == 0 || !window.WebSocket) {
+      return;
+    }
 
     message.sender = email;
-    message.senderName = localStorage.getItem("username") as string;
     message.receiver = chatList[receiverIdx].email;
     message.time = new Date();
     setMessage(message);
     console.log(message);
 
     if (socket.readyState !== WebSocket.OPEN) {
+      // socket = new WebSocket("ws://39.99.133.150:8081/ws");
       socket = new WebSocket("ws://127.0.0.1:8081/" + email);
     }
 
@@ -145,47 +121,42 @@ function ChatPage() {
 
     setMessageList([...messageList, JSON.parse(JSON.stringify(message))]);
     socket.send(JSON.stringify(message));
-    chatList[receiverIdx].lastMessageContent = message.content;
-    setChatList(JSON.parse(JSON.stringify(chatList)));
 
     // 重设，等待下一个消息输入
     message.content = "";
     setMessage(message);
-
-    autoScroll();
   }
 
   function searchUser() {
-    for (let i = 0; i < chatList.length; i++) {
-      if (chatList[i].email == searchStr) {
-        changeChat(i);
-        return;
-      }
-    }
-
     axios
       .post("http://127.0.0.1:8081/chat/search_user", {
         email: searchStr,
       })
       .then((res) => {
         console.log(res);
-        if (res.data.status == 200) {
+        if (res.data.code == 200) {
           let user = JSON.parse(res.data.data.user);
-          let newChat: chatListObj = {
-            username: user.username,
-            email: user.email,
-            messageList: [],
-            lastMessageContent: "",
-            unsentMessage: "",
-          };
-
-          changeChat(0, newChat);
-          (document.getElementById("search-input") as HTMLInputElement).value =
-            "";
-        } else if (res.data.status == 404) {
+          addUser(user, false);
+        } else if (res.data.code == 404) {
           antdmessage.warn(res.data.msg);
         }
       });
+  }
+
+  function addUser(newUser: any, isSender: boolean) {
+    let newChat: chatListObj = {
+      username: newUser.username,
+      email: newUser.email,
+      messageList: [],
+      lastMessageTime: new Date(),
+      unsentMessage: "",
+    };
+    if (isSender) {
+      changeChat(0, newChat);
+    } else {
+      // 如果收到了新消息，况且列表里面没这个人，就往列表里第一项加一个，但是不切换到第一项
+    }
+    (document.getElementById("search-input") as HTMLInputElement).value = "";
   }
 
   function saveChatMessage() {
@@ -200,52 +171,35 @@ function ChatPage() {
 
   function changeChat(index: number, newChat?: chatListObj) {
     saveChatMessage();
+
     if (newChat) {
       // 设置新的聊天数据
-      // 触发情况：1. 用户搜索并新增了聊天对象
-      setChatList([newChat, ...chatList]);
       setMessageList([]);
-    } else if (index != receiverIdx) {
-      // 触发情况：1.用户点击，切换聊天对象.
-      // 2. 用户搜索聊天对象，但是现在已经有了对话窗口
+      setChatList([newChat, ...chatList]);
+    } else {
+      // 改变接收者的值
       setReceiverIdx(index);
+      // 设置新的聊天数据
       setMessageList(JSON.parse(JSON.stringify(chatList[index].messageList)));
-      flushChatlistStyle(index);
     }
 
-    let textarea = document.getElementById(
-      "input-content"
-    ) as HTMLTextAreaElement;
-
-    textarea.value = chatList[receiverIdx].unsentMessage;
-    textarea.focus();
-  }
-
-  function flushChatlistStyle(index: number) {
     let temp = document.getElementById(
       "chat-list-item" + receiverIdx
     ) as HTMLElement;
     temp.className = temp.className.split(" ")[0];
+    (
+      document.getElementById("chat-list-item" + index) as HTMLElement
+    ).className += " " + style["chosen"];
+
+    let textarea = document.getElementById(
+      "input-content"
+    ) as HTMLTextAreaElement;
+    textarea.focus();
+    textarea.value = chatList[index].unsentMessage;
   }
 
   function logout() {
     navigate("../login");
-  }
-
-  function autoScroll() {
-    // let temp2 = document.getElementById("dialogue-content") as HTMLElement;
-    // // temp2.style.backgroundColor = "blue";
-    // temp2.scrollTop = temp2.scrollHeight;
-
-    let temp = document.getElementById(
-      "dialogue-content-scroll"
-    ) as HTMLElement;
-    // temp.style.backgroundColor = "red";
-    temp.scrollTop = 500;
-    // temp.scrollBy(0,100)
-    // temp.scrollIntoView();
-    // console.log("scrolltop", temp.scrollTop);
-    // console.log("temp", temp);
   }
 
   const settingPanel = (
@@ -258,7 +212,6 @@ function ChatPage() {
   return (
     <div className={style["container"]}>
       <div className={style["side-bar"]}>
-        {/* <img className={style['avatar']} ></img> */}
         <img
           className={style["avatar"]}
           src={require("./images/avatar.jpg")}
@@ -291,7 +244,6 @@ function ChatPage() {
         </div>
         <div className={style["chat-list"]}>
           {chatList.map((item, index) => {
-            console.log(chatList);
             return (
               <div
                 className={style["chat-list-item"]}
@@ -310,7 +262,7 @@ function ChatPage() {
                 </div>
                 <div className={style["chat-list-item-info"]}>
                   <div className={style["chat-list-item-username"]}>
-                    {item.username ? item.username : item.email}
+                    {item.username}
                   </div>
                   <div className={style["chat-list-item-lastmessage"]}>
                     {chatList[index].messageList.length > 0
@@ -332,9 +284,9 @@ function ChatPage() {
         </div>
 
         <div className={style["dialogue-content"]} id="dialogue-content">
-          <div className={style["dialogue-content-scroll"]}>
-            {messageList.map((item: messageObj, index: number) => (
-              <div id="message-item">
+          {messageList.map((item: messageObj, index: number) => {
+            return (
+              <>
                 {item.sender == email ? (
                   <div className={style["message-self"]}>
                     <img
@@ -360,9 +312,9 @@ function ChatPage() {
                     </div>
                   </div>
                 )}
-              </div>
-            ))}
-          </div>
+              </>
+            );
+          })}
         </div>
 
         <div className={style["input-box"]}>
@@ -397,18 +349,3 @@ function ChatPage() {
 }
 
 export default ChatPage;
-
-// scrollHeight: 1172
-// scrollTop: 684
-// scrollTopMax: 812
-// 684
-
-// scrollHeight: 1300
-// scrollTop: 812
-// scrollTopMax: 940
-// 812
-
-// scrollHeight: 1428
-// ​scrollTop: 588
-// ​scrollTopMax: 1068
-// 588

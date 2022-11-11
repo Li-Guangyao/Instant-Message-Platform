@@ -11,12 +11,12 @@ router.post("/search_user", async (req, res) => {
   });
   targetUser
     ? res.json({
-        code: 200,
+        status: 200,
         msg: "User exist.",
         data: { user: JSON.stringify(targetUser) },
       })
     : res.json({
-        code: 404,
+        status: 404,
         msg: "User doesn't exist.",
       });
 });

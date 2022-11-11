@@ -68,7 +68,7 @@ export default function LoginPage() {
           localStorage.setItem("token", body.data.token);
           navigate("/chat", {
             state: {
-              email: email,
+              email,
             },
           });
         } else {
