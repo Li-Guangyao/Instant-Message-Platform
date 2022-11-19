@@ -16,21 +16,31 @@
         "dotenv": "^16.0.3",
         "express": "^4.18.2",
         "fs": "^0.0.1-security",
+        "javascript": "^1.0.0",
         "jsonwebtoken": "^8.5.1",
         "mysql2": "^2.3.3",
         "nodemailer": "^6.8.0",
+        "pg-hstore": "^2.3.4",
         "redis": "^4.4.0",
         "reflect-metadata": "^0.1.13",
-        "sequelize": "^6.25.3",
+        "sequelize": "^6.25.5",
         "sequelize-typescript": "^2.1.5",
+        "ts-loader": "^9.4.1",
         "ts-node": "^10.9.1",
+        "tsc": "^2.0.4",
         "typescript": "^4.8.4",
+        "webpack": "^5.75.0",
+        "webpack-cli": "^4.10.0",
         "websocket": "^1.0.34",
         "ws": "^8.11.0"
     },
+    "devDependencies": {
+        "mysql2": "^2.3.3"
+    },
     "scripts": {
         "start": "nodemon app.ts",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "webpack"
     },
     "repository": {
         "type": "git",

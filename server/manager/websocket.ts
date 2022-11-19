@@ -57,7 +57,7 @@ export default function WSS(server: any) {
           sender: "robot",
           senderName: "robot",
           receiver: senderStr,
-          receivername: message.senderName,
+          receiverName: message.senderName,
           content: template[Math.round(Math.random() * 4)],
         };
 

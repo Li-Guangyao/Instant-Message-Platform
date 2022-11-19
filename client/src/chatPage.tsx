@@ -86,13 +86,17 @@ function ChatPage() {
       // 1. 用户就是当前聊天对象
       // 2. 用户在当前列表中，但不是当前聊天
       // 3. 用户不在当前列表中
+
+      // 情况1
       if (chatList[receiverIdx].email == newMessage.sender) {
         setMessageList([...messageList, newMessage]);
         chatList[receiverIdx].lastMessageContent = newMessage.content;
         setChatList(JSON.parse(JSON.stringify(chatList)));
+        autoScroll();
         return;
       }
 
+      // 情况2
       for (let i = 0; i < chatList.length; i++) {
         if (chatList[i].email == newMessage.sender) {
           chatList[i].messageList.push(newMessage);
@@ -102,6 +106,7 @@ function ChatPage() {
         }
       }
 
+      // 情况3
       let newChat: chatListObj = {
         username: newMessage.senderName,
         email: newMessage.sender,
@@ -114,8 +119,6 @@ function ChatPage() {
       let temp = document.getElementById("chat-list-item0") as HTMLElement;
       temp.className = temp.className.split(" ")[0];
     }
-
-    autoScroll();
   };
 
   socket.onopen = function (event: any) {
@@ -217,8 +220,10 @@ function ChatPage() {
       "input-content"
     ) as HTMLTextAreaElement;
 
-    textarea.value = chatList[receiverIdx].unsentMessage;
+    textarea.value = "";
+    textarea.value = chatList[index].unsentMessage;
     textarea.focus();
+    autoScroll();
   }
 
   function flushChatlistStyle(index: number) {
@@ -233,19 +238,12 @@ function ChatPage() {
   }
 
   function autoScroll() {
-    // let temp2 = document.getElementById("dialogue-content") as HTMLElement;
-    // // temp2.style.backgroundColor = "blue";
-    // temp2.scrollTop = temp2.scrollHeight;
-
-    let temp = document.getElementById(
-      "dialogue-content-scroll"
-    ) as HTMLElement;
-    // temp.style.backgroundColor = "red";
-    temp.scrollTop = 500;
-    // temp.scrollBy(0,100)
-    // temp.scrollIntoView();
-    // console.log("scrolltop", temp.scrollTop);
-    // console.log("temp", temp);
+    setTimeout(() => {
+      let temp = document.getElementById(
+        "dialogue-content-scroll"
+      ) as HTMLElement;
+      temp.children[temp.children.length - 1].scrollIntoView(true);
+    }, 100);
   }
 
   const settingPanel = (
@@ -332,7 +330,10 @@ function ChatPage() {
         </div>
 
         <div className={style["dialogue-content"]} id="dialogue-content">
-          <div className={style["dialogue-content-scroll"]}>
+          <div
+            className={style["dialogue-content-scroll"]}
+            id="dialogue-content-scroll"
+          >
             {messageList.map((item: messageObj, index: number) => (
               <div id="message-item">
                 {item.sender == email ? (

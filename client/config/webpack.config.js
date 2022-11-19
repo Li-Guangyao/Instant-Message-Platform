@@ -755,9 +755,3 @@ module.exports = function (webpackEnv) {
     performance: false,
   };
 };
-
-// module.exports = {
-//   resolve: {
-//       fallback: { "timers": require.resolve('timers-browserify') }
-//   },
-// };

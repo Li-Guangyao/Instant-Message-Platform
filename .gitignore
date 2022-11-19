@@ -28,4 +28,9 @@ yarn-error.log*
 
 /client/.VSCodeCounter
 /client/build
+/client/dist
+
+/server/build
+/server/dist
+
 .idea

@@ -29,7 +29,7 @@
 //     logging:console.log
 // });
 
-import {Sequelize} from 'sequelize-typescript';
+import {Sequelize} from 'sequelize';
 import dotenv from 'dotenv'
 
 console.log('Init sequelize for mysql...');
@@ -38,6 +38,7 @@ export let sequelize = new Sequelize('imapp', 'imappuser', 'qwer1234', {
     host: '39.99.133.150',
     port: 3306,
     dialect: 'mysql',
+    dialectModule: require('mysql2'),
     pool: {
         max: 100,
         min: 0,

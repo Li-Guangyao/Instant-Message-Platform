@@ -1,6 +1,5 @@
 import { Router, Response, Request } from "express";
 import { verifyToken } from "../manager/jwt";
-const model = require("../models/model.js");
 const router: Router = Router();
 
 router.post("/upload_image", async (req: Request, res: Response) => {
