@@ -16,6 +16,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
+// jwt中间件
 // app.use(verifyToken)
 
 app.get("/", function (req: Request, res: Response) {

@@ -8,7 +8,7 @@ import "antd/lib/popover/style/index.css";
 import "antd/lib/message/style/index.css";
 import "antd/lib/popconfirm/style/index.css";
 
-// let socket = new WebSocket("ws://39.99.133.150:8082/ws");
+// let socket = new WebSocket("ws://http://127.0.0.1:8082/ws");
 let email = localStorage.getItem("email") as string;
 let username = localStorage.getItem("username") as string;
 let socket: WebSocket = new WebSocket("ws://127.0.0.1:8081/" + email);
@@ -68,7 +68,7 @@ function ChatPage() {
   ]);
 
   useEffect(() => {
-    console.log("receiveIdx改变", receiverIdx);
+    // console.log("receiveIdx改变", receiverIdx);
     (
       document.getElementById("chat-list-item" + receiverIdx) as HTMLElement
     ).className += " " + style["chosen"];
@@ -77,49 +77,49 @@ function ChatPage() {
   // Will be triggered when receiveing a message;
   socket.onmessage = function (e: any) {
     const newMessage: messageObj = JSON.parse(e.data);
-    console.log(receiverIdx);
+    console.log(newMessage);
 
-    if (newMessage.sender == "system") {
-      antdmessage.warn(message.content);
-    } else {
-      // 三种情况
-      // 1. 用户就是当前聊天对象
-      // 2. 用户在当前列表中，但不是当前聊天
-      // 3. 用户不在当前列表中
+    // if (newMessage.sender == "system") {
+    //   antdmessage.warn("system"+ message.content);
+    // } else {
+    // 三种情况
+    // 1. 用户就是当前聊天对象
+    // 2. 用户在当前列表中，但不是当前聊天
+    // 3. 用户不在当前列表中
 
-      // 情况1
-      if (chatList[receiverIdx].email == newMessage.sender) {
-        setMessageList([...messageList, newMessage]);
-        chatList[receiverIdx].lastMessageContent = newMessage.content;
+    // 情况1
+    if (chatList[receiverIdx].email == newMessage.sender) {
+      setMessageList([...messageList, newMessage]);
+      chatList[receiverIdx].lastMessageContent = newMessage.content;
+      setChatList(JSON.parse(JSON.stringify(chatList)));
+      autoScroll();
+      return;
+    }
+
+    // 情况2
+    for (let i = 0; i < chatList.length; i++) {
+      if (chatList[i].email == newMessage.sender) {
+        chatList[i].messageList.push(newMessage);
+        chatList[i].lastMessageContent = newMessage.content;
         setChatList(JSON.parse(JSON.stringify(chatList)));
-        autoScroll();
         return;
       }
-
-      // 情况2
-      for (let i = 0; i < chatList.length; i++) {
-        if (chatList[i].email == newMessage.sender) {
-          chatList[i].messageList.push(newMessage);
-          chatList[i].lastMessageContent = newMessage.content;
-          setChatList(JSON.parse(JSON.stringify(chatList)));
-          return;
-        }
-      }
-
-      // 情况3
-      let newChat: chatListObj = {
-        username: newMessage.senderName,
-        email: newMessage.sender,
-        messageList: [newMessage],
-        lastMessageContent: newMessage.content,
-        unsentMessage: "",
-      };
-      setChatList([newChat, ...chatList]);
-      setReceiverIdx((receiverIdx) => receiverIdx + 1);
-      let temp = document.getElementById("chat-list-item0") as HTMLElement;
-      temp.className = temp.className.split(" ")[0];
     }
+
+    // 情况3
+    let newChat: chatListObj = {
+      username: newMessage.senderName,
+      email: newMessage.sender,
+      messageList: [newMessage],
+      lastMessageContent: newMessage.content,
+      unsentMessage: "",
+    };
+    setChatList([newChat, ...chatList]);
+    setReceiverIdx((receiverIdx) => receiverIdx + 1);
+    let temp = document.getElementById("chat-list-item0") as HTMLElement;
+    temp.className = temp.className.split(" ")[0];
   };
+  // };
 
   socket.onopen = function (event: any) {
     console.log("Websocket connected.");
@@ -137,7 +137,7 @@ function ChatPage() {
     message.receiver = chatList[receiverIdx].email;
     message.time = new Date();
     setMessage(message);
-    console.log(message);
+    console.log("send", message);
 
     if (socket.readyState !== WebSocket.OPEN) {
       socket = new WebSocket("ws://127.0.0.1:8081/" + email);
@@ -171,7 +171,6 @@ function ChatPage() {
         email: searchStr,
       })
       .then((res) => {
-        console.log(res);
         if (res.data.status == 200) {
           let user = JSON.parse(res.data.data.user);
           let newChat: chatListObj = {
@@ -242,7 +241,9 @@ function ChatPage() {
       let temp = document.getElementById(
         "dialogue-content-scroll"
       ) as HTMLElement;
-      temp.children[temp.children.length - 1].scrollIntoView(true);
+      if (temp.children.length > 2) {
+        temp.children[temp.children.length - 1].scrollIntoView(true);
+      }
     }, 100);
   }
 
@@ -289,7 +290,6 @@ function ChatPage() {
         </div>
         <div className={style["chat-list"]}>
           {chatList.map((item, index) => {
-            console.log(chatList);
             return (
               <div
                 className={style["chat-list-item"]}

@@ -5,9 +5,34 @@ import User from "../models/User";
 const emailManager = require("../manager/emailManager.js");
 const router: Router = Router();
 
+function generateCode(): string {
+  const res = "" + Math.round(Math.random() * 1000000);
+  return res;
+}
+
+function sendCode(email: string): void {
+  const code = generateCode();
+  emailManager.sendMail(email, code);
+  const codeObj = {
+    code,
+    expireTime: Date.now() + 1000 * 60 * 2,
+  };
+  redisManager.set(email, JSON.stringify(codeObj));
+}
+
+async function verifyCode(email: string, code: string) {
+  const codeObj = JSON.parse(await redisManager.get(email));
+  console.log("code", code);
+  if (codeObj && Date.now() <= codeObj.expireTime) {
+    return codeObj.code == code;
+  } else {
+    return false;
+  }
+}
+
 // 执行注册功能
 router.post("/", async (req: Request, res: Response) => {
-  const { username, email, password } = req.body.data;
+  const { username, email, password } = req.body;
   User.findOrCreate({
     where: { email },
     defaults: {
@@ -43,6 +68,7 @@ router.post("/send_code", async (req: Request, res: Response) => {
       msg: "The email has been registered, please change one.",
     });
   } else {
+    sendCode(email);
     res.json({
       status: 200,
       msg: "Send a authorization code.",
@@ -51,35 +77,10 @@ router.post("/send_code", async (req: Request, res: Response) => {
 });
 
 router.post("/verify_code", async (req: Request, res: Response) => {
-  const { email, code } = req.body.data;
+  const { email, code } = req.body;
   res.json({
     status: await verifyCode(email, code),
   });
 });
-
-function generateCode(): string {
-  const res = "" + Math.round(Math.random() * 1000000);
-  return res;
-}
-
-function sendCode(email: string): void {
-  const code = generateCode();
-  emailManager.sendMail(email, code);
-  const codeObj = {
-    code,
-    expireTime: Date.now() + 1000 * 60 * 2,
-  };
-  redisManager.set(email, JSON.stringify(codeObj));
-}
-
-async function verifyCode(email: string, code: string) {
-  const codeObj = JSON.parse(await redisManager.get(email));
-  console.log("code", code);
-  if (codeObj && Date.now() <= codeObj.expireTime) {
-    return codeObj.code == code;
-  } else {
-    return false;
-  }
-}
 
 export default router;

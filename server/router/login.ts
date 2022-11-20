@@ -28,6 +28,7 @@ router.post("/", async (req: Request, res: Response) => {
       status: 200,
       msg: "Log in successfully.",
       data: {
+        username: rows[0].username,
         token,
       },
     });

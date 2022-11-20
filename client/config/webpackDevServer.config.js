@@ -33,7 +33,7 @@ module.exports = function (proxy, allowedHost) {
     // So we will disable the host check normally, but enable it if you have
     // specified the `proxy` setting. Finally, we let you override it if you
     // really know what you're doing with a special environment variable.
-    // Note: ["localhost", ".localhost"] will support subdomains - but we might
+    // Note: ["http://127.0.0.1", ".http://127.0.0.1"] will support subdomains - but we might
     // want to allow setting the allowedHosts manually for more complex setups
     allowedHosts: disableFirewall ? 'all' : [allowedHost],
     headers: {

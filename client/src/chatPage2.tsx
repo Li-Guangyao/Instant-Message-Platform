@@ -8,7 +8,7 @@ import "antd/lib/popover/style/index.css";
 import "antd/lib/message/style/index.css";
 import "antd/lib/popconfirm/style/index.css";
 
-// let socket = new WebSocket("ws://39.99.133.150:8082/ws");
+// let socket = new WebSocket("ws://http://127.0.0.1:8082/ws");
 let email = localStorage.getItem("email") as string;
 let username = localStorage.getItem("username") as string;
 let socket: WebSocket = new WebSocket("ws://127.0.0.1:8081/" + email);
@@ -112,7 +112,7 @@ function ChatPage() {
     console.log(message);
 
     if (socket.readyState !== WebSocket.OPEN) {
-      // socket = new WebSocket("ws://39.99.133.150:8081/ws");
+      // socket = new WebSocket("ws://http://127.0.0.1:8081/ws");
       socket = new WebSocket("ws://127.0.0.1:8081/" + email);
     }
 

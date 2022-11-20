@@ -65,6 +65,7 @@ export default function LoginPage() {
         if (body.status == 200) {
           message.success(res.data.msg);
           localStorage.setItem("email", email);
+          localStorage.setItem("username", body.data.username)
           localStorage.setItem("token", body.data.token);
           navigate("/chat", {
             state: {

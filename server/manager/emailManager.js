@@ -6,8 +6,8 @@ let transporter = nodemailer.createTransport({
   //node_modules/nodemailer/lib/well-known/services.json  查看相关的配置，如果使用qq邮箱，就查看qq邮箱的相关配置
   host: process.env.EMAIL_HOST,
   service: process.env.EMAIL_SERVICE, //类型qq邮箱
-  port: process.env.EMAIL_PORT,
-  secure: true, // true for 465, false for other ports
+  port: 25,
+  secure: false, // true for 465, false for other ports
   auth: {
     user: process.env.EMAIL_SENDER, // 发送方的邮箱
     pass: process.env.EMAIL_AUTHORIZATION_CODE, // smtp 的授权码
